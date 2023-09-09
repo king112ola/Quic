@@ -1,0 +1,281 @@
+// variable
+@primary-bg-color: #1d1d1d;
+// @primary-bg-color: red;
+@primary-text-color: rgb(255, 255, 255);
+@button-bg-color: #b44bfd;
+
+// Font
+@font-face {
+  font-family: 'Rubik Iso';
+  src: url(/assets/fonts/RubikIso-Regular.ttf);
+}
+
+@font-face {
+  font-family: "Sono";
+  src: url(/assets/fonts/Sono-Regular.ttf);
+}
+
+@font-face {
+  font-family: "Tilt Wrap";
+  src: url(/assets/fonts/TiltWarp-Regular.ttf);
+}
+
+body {
+  background-color: @primary-bg-color !important;
+  color: @primary-text-color;
+}
+
+/* navbar */
+.navbar-custom {
+  background-color: @primary-bg-color;
+}
+
+/* change the brand and text color */
+.navbar-custom .navbar-brand,
+.navbar-custom .navbar-text {
+  color: @primary-text-color;
+}
+
+//logo
+#logo {
+  max-height: 5%;
+  max-width: 10%;
+}
+
+// Summary
+#summaryText {
+  //  font-family:"Rubik Iso";
+  font-size: 25px;
+  text-align: center;
+  padding: 17.2%;
+}
+
+#detailedSummary {
+  display: inline;
+  font-family: Sono;
+  font-size: 10px;
+  text-align: center;
+  // padding-bottom: 15%;
+  // padding-right: 15%;
+}
+
+.col {
+  display: inline-block;
+}
+
+
+// Btn
+#exploreButton {
+  border-radius: 2.5%;
+  color: @primary-text-color;
+  background-color: @button-bg-color;
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  font-size: 16px;
+  // opacity: 0.6;
+  transition: 0.3s;
+  font-family: "Sono";
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+
+}
+
+#exploreButton:hover {
+  // opacity: 1;
+  background-image: url("/assets/images/bg.gif");
+  border: #ffffff 5px solid;
+}
+
+.exploreButtonDiv {
+  vertical-align: top;
+  display: flex;
+  justify-content: center;
+  top: 77vh;
+}
+
+// floating image
+.mainFloatingBox {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  transform: translateY(-25%);
+}
+
+.mainFloatingImg {
+  transform: translateY(-5%);
+  animation: floaterMain 6s infinite;
+  transition: ease 0.5s;
+  width: 60%;
+  height: 60%;
+}
+
+@keyframes floaterMain {
+  0% {
+    transform: translateY(-5%);
+    transition: ease 0.5s;
+  }
+
+  50% {
+    transform: translateY(5%);
+    transition: ease 0.5s;
+  }
+}
+
+
+// @media only screen and (max-width: 600px) {
+
+// }
+
+
+.floatingBox1 {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+}
+
+.floatingImg1 {
+  transform: translateY(-15%);
+  animation: floater1 3s infinite;
+  transition: ease 0.5s;
+  width: 20%;
+  height: 20%;
+}
+
+@keyframes floater1 {
+  0% {
+    transform: translateY(-15%);
+    transition: ease 0.5s;
+  }
+
+  50% {
+    transform: translateY(15%);
+    transition: ease 0.5s;
+  }
+}
+
+// @media only screen and (max-width: 600px) {
+//   .floatingBox1 {
+//     position: absolute;
+//     top: 50%;
+//     left: 5%;
+//   }
+
+//   .floatingImg1 {
+//     transform: translateY(-30%);
+//     animation: floater1 3s infinite;
+//     transition: ease 0.5s;
+//     width: 30%;
+//     height: 30%;
+//   }
+
+//   @keyframes floater1 {
+//     0% {
+//       transform: translateY(-30%);
+//       transition: ease 0.5s;
+//     }
+//     50% {
+//       transform: translateY(30%);
+//       transition: ease 0.5s;
+//     }
+//   }
+// }
+
+// @media only screen and (max-width: 300px) {
+//   .floatingBox1 {
+//     position: absolute;
+//     top: 60%;
+//     left: -5%;
+//   }
+
+//   .floatingImg1 {
+//     transform: translateY(-30%);
+//     animation: floater1 3s infinite;
+//     transition: ease 0.5s;
+//     width: 40%;
+//     height: 40%;
+//   }
+
+//   @keyframes floater1 {
+//     0% {
+//       transform: translateY(-30%);
+//       transition: ease 0.5s;
+//     }
+//     50% {
+//       transform: translateY(30%);
+//       transition: ease 0.5s;
+//     }
+//   }
+// }
+
+// Floating 2
+.floatingBox2 {
+  position: absolute;
+  top: 40%;
+  left: 15%;
+}
+
+.floatingImg2 {
+  transform: translatY(-25%);
+  animation: floater2 4s infinite;
+  transition: ease 0.5s;
+  width: 35%;
+  height: 35%;
+}
+
+@keyframes floater2 {
+  0% {
+    transform: translateY(0%);
+    transition: ease 0.5s;
+  }
+
+  50% {
+    transform: translateY(-25%);
+    transition: ease 0.5s;
+  }
+}
+
+// Floating 3
+.floatingBox3 {
+  position: absolute;
+  top: 20%;
+  left: 65%;
+}
+
+.floatingImg3 {
+  transform: translatY(-70%);
+  animation: floater2 3.5s infinite;
+  transition: ease 0.5s;
+  width: 70%;
+  height: 70%;
+}
+
+@keyframes floater3 {
+  0% {
+    transform: translateY(0%);
+    transition: ease 0.5s;
+  }
+
+  50% {
+    transform: translateY(-70%);
+    transition: ease 0.5s;
+  }
+}
+
+#floatingBoxLayer {
+  position: relative;
+  z-index: -1;
+}
+
+#floatingBoxLayer {
+  height: 2px;
+}
+
+@media only screen and (max-width: 600px) {
+  #summaryText {
+    padding-bottom: 50vh;
+  }
+}
