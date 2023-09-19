@@ -540,7 +540,8 @@ app.post('/api/v1/RIFFUSION', async (req, res) => {
 
 })
 
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////// Handleing API call///////////////////////////////////////////////////////////////
 
 // handleing Eden Ai PDF Translation api call
 app.post('/api/v1/PDFTRANSEDEN', async (req, res) => {
@@ -860,7 +861,7 @@ app.post('/api/v1/DID_V2', async (req, res) => {
 
 })
 
-// handleing chatgpt api call
+// handleing QuicAI api call
 app.post('/api/v1/QuicAI', async (req, res) => {
 
   function classify_requested_content_type(requested_content_type) {
@@ -934,7 +935,15 @@ app.post('/api/v1/QuicAI', async (req, res) => {
 
 // handleing chatgpt api call
 app.post('/api/v1/Chatgpt', async (req, res) => {
-
+  try{
+    if(!req.body.prompt)
+    {
+      console.log("Empty prompt1");
+      res.status(500).send(error || 'Something went wrong in prompt.');
+    }
+  }catch(error){
+    console.log("Empty prompt2");    
+  }
   // update last message number
   // model for "gpt - 3.5 - turbo"
 
