@@ -327,8 +327,19 @@ app.get('/', async (req, res) => {
 
 // handeling request to stsable deffision 
 app.post('/api/v1/STABLEDIFFUSION', async (req, res) => {
+
   config.lastSTABLEDIFFUSION_Image_IDNumber += 1
   fs.writeFileSync('config.json', JSON.stringify(config));
+  
+  try{
+    if(!req.body.prompt){
+      console.log("Error missing argument");
+      res.status(500).send(error || 'Missing argument in prompt.');  
+    }
+  }catch(error){
+    console.error(error);
+    res.status(500).send(error || 'Missing argument in prompt.');
+  }
 
   const prompt = req.body.prompt;
 
@@ -372,9 +383,18 @@ app.post('/api/v1/STABLEDIFFUSION', async (req, res) => {
 // handeling request to openjourney
 app.post('/api/v1/OPENJOURNEY', async (req, res) => {
 
-
   config.lastOPENJOURNEY_Image_IDNumber += 1
   fs.writeFileSync('config.json', JSON.stringify(config));
+
+  try{
+    if(!req.body.prompt){
+      console.log("Error missing argument");
+      res.status(500).send(error || 'Missing argument in prompt.');  
+    }
+  }catch(error){
+    console.error(error);
+    res.status(500).send(error || 'Missing argument in prompt.');
+  }
 
   const prompt = req.body.prompt;
 
@@ -419,6 +439,16 @@ app.post('/api/v1/ANYTHING', async (req, res) => {
 
   config.lastANYTHING_Image_IDNumber += 1
   fs.writeFileSync('config.json', JSON.stringify(config));
+
+  try{
+    if(!req.body.prompt){
+      console.log("Error missing argument");
+      res.status(500).send(error || 'Missing argument in prompt.');  
+    }
+  }catch(error){
+    console.error(error);
+    res.status(500).send(error || 'Missing argument in prompt.');
+  }
 
   const prompt = req.body.prompt;
 
@@ -465,6 +495,16 @@ app.post('/api/v1/RIFFUSION', async (req, res) => {
   // update last image number
   config.lastRIFFUSION_AudioPlusImage_IDNumber += 1
   fs.writeFileSync('config.json', JSON.stringify(config));
+
+  try{
+    if(!req.body.prompt){
+      console.log("Error missing argument");
+      res.status(500).send(error || 'Missing argument in prompt.');  
+    }
+  }catch(error){
+    console.error(error);
+    res.status(500).send(error || 'Missing argument in prompt.');
+  }
 
   let startPrompt
   let endPrompt
@@ -546,6 +586,16 @@ app.post('/api/v1/RIFFUSION', async (req, res) => {
 // handleing Eden Ai PDF Translation api call
 app.post('/api/v1/PDFTRANSEDEN', async (req, res) => {
 
+  try{
+    if(!req.body.uploadedPdf || !req.body.preferredLanguage){
+      console.log("Error missing argument");
+      res.status(500).send(error || 'Somethings went wrong in uploaded PDF or preferred Language.');  
+    }
+  }catch(error){
+    console.error(error);
+    res.status(500).send(error || 'Somethings went wrong in uploaded PDF or preferred Language.');
+  }
+
   const uploadedPdfInBase64 = req.body.uploadedPdf
 
   const preferredLanguage = req.body.preferredLanguage
@@ -613,7 +663,17 @@ app.post('/api/v1/T2SEDEN', async (req, res) => {
   // store and add the number if the chatgot message
   config.lastT2SEDEN_Audio_IDNumber += 1
   fs.writeFileSync('config.json', JSON.stringify(config));
-
+  
+  try{
+    if(!req.body.prompt){
+      console.log("Error missing argument");
+      res.status(500).send(error || 'Missing argument in prompt.');  
+    }
+  }catch(error){
+    console.error(error);
+    res.status(500).send(error || 'Missing argument in prompt.');
+  }
+  
   const prompt = req.body.prompt;
 
   const createTextToSpeechFromEden = async (provider) => {
@@ -681,6 +741,16 @@ app.post('/api/v1/SAMSUM', async (req, res) => {
   config.lastSAMSUM_Text_IDNumber += 1
   fs.writeFileSync('config.json', JSON.stringify(config));
 
+  try{
+    if(!req.body.prompt){
+      console.log("Error missing argument");
+      res.status(500).send(error || 'Missing argument in prompt.');  
+    }
+  }catch(error){
+    console.error(error);
+    res.status(500).send(error || 'Missing argument in prompt.');
+  }
+
   const prompt = req.body.prompt;
 
   const createSummeryFromSAMSUM = async () => {
@@ -720,6 +790,16 @@ app.post('/api/v1/SAMSUM', async (req, res) => {
 
 // handleing DID api call
 app.post('/api/v1/DID', async (req, res) => {
+
+  try{
+    if(!req.body.prompt){
+      console.log("Error missing argument");
+      res.status(500).send(error || 'Missing argument in prompt.');  
+    }
+  }catch(error){
+    console.error(error);
+    res.status(500).send(error || 'Missing argument in prompt.');
+  }
 
   const prompt = req.body.prompt;
 
@@ -883,6 +963,16 @@ app.post('/api/v1/QuicAI', async (req, res) => {
     }
   ]
 
+  try{
+    if(!req.body.prompt){
+      console.log("Error missing argument");
+      res.status(500).send(error || 'Missing argument in prompt.');  
+    }
+  }catch(error){
+    console.error(error);
+    res.status(500).send(error || 'Missing argument in prompt.');
+  }
+  
   try {
     const prompt = req.body.prompt;
     response = await openai.createChatCompletion({
@@ -935,14 +1025,15 @@ app.post('/api/v1/QuicAI', async (req, res) => {
 
 // handleing chatgpt api call
 app.post('/api/v1/Chatgpt', async (req, res) => {
+  
   try{
-    if(!req.body.prompt)
-    {
-      console.log("Empty prompt1");
-      res.status(500).send(error || 'Something went wrong in prompt.');
+    if(!req.body.prompt){
+      console.log("Error missing argument");
+      res.status(500).send(error || 'Missing argument in prompt.');  
     }
   }catch(error){
-    console.log("Empty prompt2");    
+    console.error(error);
+    res.status(500).send(error || 'Missing argument in prompt.');
   }
   // update last message number
   // model for "gpt - 3.5 - turbo"
@@ -950,7 +1041,7 @@ app.post('/api/v1/Chatgpt', async (req, res) => {
   // store and add the number if the chatgot message
   config.lastChatgpt_Text_IDNumber += 1
   fs.writeFileSync('config.json', JSON.stringify(config));
-
+ 
   try {
     const prompt = req.body.prompt;
     const response = await openai.createChatCompletion({
@@ -983,12 +1074,22 @@ app.post('/api/v1/Chatgpt', async (req, res) => {
     console.error(error)
     res.status(500).send(error || 'Something went wrong in Chatgpt end point.');
   }
-
+  
 
 })
 
 // handle DALL·E 2 api call
 app.post('/api/v1/DALLE2', async (req, res) => {
+ 
+  try{
+    if(!req.body.prompt){
+      console.log("Error missing argument");
+      res.status(500).send(error || 'Missing argument in prompt.');  
+    }
+  }catch(error){
+    console.error(error);
+    res.status(500).send(error || 'Missing argument in prompt.');
+  }
 
   try {
     const prompt = req.body.prompt;
