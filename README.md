@@ -2,6 +2,10 @@
 
 ### The centralized AI platform with decentralization
 
+![Static Badge](https://img.shields.io/badge/Quic%20Page-8A2BE2?link=https%3A%2F%2Fquic-ai.netlify.app%2F)
+![Static Badge](https://img.shields.io/badge/Quic%20Landing-brightgreen?link=https%3A%2F%2Fquic-ai-welcome.netlify.app%2F)
+![Static Badge](https://img.shields.io/badge/Quic%20Demo-DA70D6?link=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Ddbl-tPG1UUw)
+
 ## Description
 
 Quic is a platform that connects various publicly available large-scale AI engines into one single platform that mainly runs on the blockchain. The platform is able to take in various user prompts, serve them to various AIs decided by the user or by an automatic AI prompt-routing algorithm, and then return the results back to the user in the application platform in a decentralized way. 
