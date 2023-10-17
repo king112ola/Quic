@@ -96,29 +96,28 @@ const uploadToIpfs_Moralis = async (content, prompt, type) => {
         path: 'message-' + config.lastDALLE2_Image_IDNumber + '.' + content.split('/')[1],
         content: fs.readFileSync('./' + content, { encoding: "base64" })
       })
-
       break;
 
     case 'DID':
-
       uploadInfo.push({
         path: 'message-' + config.lastDID_Video_IDNumber + '.D-ID' + '.mp4',
         content: fs.readFileSync('./' + content, { encoding: "base64" })
       })
 
     case 'T2SEDEN':
-
       uploadInfo.push({
         path: 'message-' + config.lastT2SEDEN_Audio_IDNumber + '.Text2Speech-EDEN' + '.wav',
         content: fs.readFileSync('./' + content, { encoding: "base64" })
       })
       break;
+
     case 'PDFTRANSEDEN':
       uploadInfo.push({
         path: 'message-' + config.lastPDFTRANSEDEN_Pdf_IDNumber + '.PdfTranslate-EDEN' + '.pdf',
         content: fs.readFileSync('./' + content.pdfPathAfterTrans, { encoding: "base64" })
       })
       break;
+
     case 'RIFFUSION':
       uploadInfo.push({
         path: 'message-' + config.lastRIFFUSION_AudioPlusImage_IDNumber + '.RIFFUSION' + '.mp3',
@@ -131,14 +130,13 @@ const uploadToIpfs_Moralis = async (content, prompt, type) => {
         path: 'message-' + config.lastSTABLEDIFFUSION_Image_IDNumber + '.' + content.split('/')[1],
         content: fs.readFileSync('./' + content, { encoding: "base64" })
       })
-
       break;
+
     case 'OPENJOURNEY':
       uploadInfo.push({
         path: 'message-' + config.lastOPENJOURNEY_Image_IDNumber + '.' + content.split('/')[1],
         content: fs.readFileSync('./' + content, { encoding: "base64" })
       })
-
       break;
 
     case 'ANYTHING':
@@ -146,12 +144,12 @@ const uploadToIpfs_Moralis = async (content, prompt, type) => {
         path: 'message-' + config.lastANYTHING_Image_IDNumber + '.' + content.split('/')[1],
         content: fs.readFileSync('./' + content, { encoding: "base64" })
       })
-
       break;
 
     default:
       break;
   }
+
   // add prompt
   uploadInfo.push({
     path: type + '-' + config['last' + type + '_' + contentType[type] + '_IDNumber'] + '.prompt' + '.json',
@@ -212,10 +210,6 @@ const uploadToIpfs_Moralis = async (content, prompt, type) => {
   let resultIpfsLinksDwebLinkIPFS = JSON.parse(JSON.stringify(resultIpfsLinks).replaceAll('ipfs.moralis.io:2053', 'dweb.link'))
   return resultIpfsLinksDwebLinkIPFS
 }
-
-
-// 
-
 
 // download function for getting image form url
 const downloadDALLE2Image = (url, dest, cb) => {
@@ -302,9 +296,7 @@ const downloadT2SEDENAudio = (url, dest, cb) => {
 
 };
 
-
 // dotenv.config()
-
 // set up open Ai
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -355,7 +347,6 @@ app.post('/api/v1/STABLEDIFFUSION', async (req, res) => {
     );
     const result = await response.blob();
     const buffer = Buffer.from(await result.arrayBuffer());
-
 
     if (result === undefined)
       return await createImageFromSTABLEDIFFUSION({ "inputs": prompt })
@@ -411,7 +402,6 @@ app.post('/api/v1/OPENJOURNEY', async (req, res) => {
     const result = await response.blob();
     const buffer = Buffer.from(await result.arrayBuffer());
 
-
     if (result === undefined)
       return await createImageFromOPENJOURNEY({ "inputs": prompt })
 
@@ -465,7 +455,6 @@ app.post('/api/v1/ANYTHING', async (req, res) => {
     const result = await response.blob();
     const buffer = Buffer.from(await result.arrayBuffer());
 
-
     if (result === undefined)
       return await createImageFromANYTHING({ "inputs": prompt })
 
@@ -518,8 +507,7 @@ app.post('/api/v1/RIFFUSION', async (req, res) => {
     endPrompt = req.body.end
   }
 
-  // fetch session from the local riffision interface api
-  //////////////////////////////////////
+  // fetch session from the local riffision interface api //
 
   let request = {
     "alpha": 0.75,
@@ -540,8 +528,6 @@ app.post('/api/v1/RIFFUSION', async (req, res) => {
       "guidance": 7.0
     }
   }
-
-
 
   const response = await fetch(process.env.RIFFUSION_API_URL, {
     method: "POST",
@@ -580,7 +566,6 @@ app.post('/api/v1/RIFFUSION', async (req, res) => {
 
 })
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////// Handleing API call///////////////////////////////////////////////////////////////
 
 // handleing Eden Ai PDF Translation api call
@@ -653,9 +638,7 @@ app.post('/api/v1/PDFTRANSEDEN', async (req, res) => {
   uploadedIpfsMessage.push({ messageBodyInBase64: 'data:application/pdf;base64,' + PDFTRANSResult.resFromEdenJson })
   res.status(200).send(uploadedIpfsMessage);
 
-
 })
-
 
 // handleing Eden Ai Text To Speech api call
 app.post('/api/v1/T2SEDEN', async (req, res) => {
@@ -697,7 +680,6 @@ app.post('/api/v1/T2SEDEN', async (req, res) => {
       })
     };
 
-
     let res = await fetch(url, options).catch(err => console.error('error:' + err));
 
     let resJson = await res.json()
@@ -705,10 +687,8 @@ app.post('/api/v1/T2SEDEN', async (req, res) => {
     if (resJson[provider].status === 'fail')
       return await createTextToSpeechFromEden('google')
 
-
     let T2SEDENAudio_resource_url = resJson[provider].audio_resource_url
     return T2SEDENAudio_resource_url
-
 
   }
 
@@ -729,7 +709,6 @@ app.post('/api/v1/T2SEDEN', async (req, res) => {
     console.error(error)
     res.status(500).send(error || 'Something went wrong in SAMSUM end point');
   }
-
 
 })
 
@@ -783,7 +762,6 @@ app.post('/api/v1/SAMSUM', async (req, res) => {
     console.error(error)
     res.status(500).send(error || 'Something went wrong in SAMSUM end point');
   }
-
 
 })
 
@@ -847,8 +825,6 @@ app.post('/api/v1/DID', async (req, res) => {
     let resInJson = await res.json()
     let status = resInJson.status
 
-
-
     if (status !== "done")
       return await getVideoFromDID(videoID)
 
@@ -856,7 +832,6 @@ app.post('/api/v1/DID', async (req, res) => {
       let videoUrl = resInJson.result_url
       return videoUrl
     }
-
 
   }
 
@@ -903,7 +878,6 @@ app.post('/api/v1/DID_V2/VideoGeneratedWebhook/:chatID', async (req, res) => {
   })
 
   // let resJson = await chatEngineRes.json()
-
   res.status(200).end();
 })
 
@@ -929,7 +903,6 @@ app.post('/api/v1/DID_V2', async (req, res) => {
 
     let res = await fetch(url, options).catch(err => console.error('error:' + err));
   }
-
 
   try {
     await createVideoFromDID()
@@ -1050,7 +1023,6 @@ app.post('/api/v1/Chatgpt', async (req, res) => {
       max_tokens: 1000,
     })
 
-
     // model for "text-davinci-003"
 
     // const response = await openai.createCompletion({
@@ -1074,7 +1046,6 @@ app.post('/api/v1/Chatgpt', async (req, res) => {
     console.error(error)
     res.status(500).send(error || 'Something went wrong in Chatgpt end point.');
   }
-  
 
 })
 
