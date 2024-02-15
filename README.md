@@ -59,4 +59,4 @@ Contains the logic for designing the smart contract including upload IPFS conten
 
 ## Contact us!
 
-If you have any questions, feel free to open an issue to reach out. More contact details of other platforms will be filled in later. 
+If you have any questions or would like to get in touch with us, contact quic.ai.team@gmail.com. 
