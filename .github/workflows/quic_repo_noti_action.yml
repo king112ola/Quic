@@ -1,0 +1,23 @@
+name: Quic Discord Notification
+
+on:
+  push:
+    branches: 
+    - '*'
+  pull_request:
+    branches:
+    - '*'
+  issues:
+    types: [opened, edited, milestoned]
+
+jobs:
+  send_noti:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send status to Discord
+        uses: sarisia/actions-status-discord@v1.13.1
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          
+
