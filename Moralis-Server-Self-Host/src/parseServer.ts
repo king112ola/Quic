@@ -4,7 +4,6 @@ import config from './config';
 import MoralisEthAdapter from './auth/MoralisEthAdapter';
 
 export const parseServer = new ParseServer({
- 
   databaseURI: config.DATABASE_URI,
   cloud: config.CLOUD_PATH,
   serverURL: config.SERVER_URL,
@@ -15,8 +14,5 @@ export const parseServer = new ParseServer({
     moralisEth: {
       module: MoralisEthAdapter,
     },
-  },
-  liveQuery: {
-    classNames: ["Food","_User","MessagesOnIPFS"] // List of classes to support for query subscriptions
   },
 });

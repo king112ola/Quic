@@ -27,7 +27,7 @@ function getErrorMessage(error, name) {
     return `API error while calling ${name}`;
 }
 function getOperation(operationName) {
-    const operation = common_sol_utils_1.operations.find((o) => o.name === operationName);
+    const operation = common_sol_utils_1.operationsV2All.find((o) => o.name === operationName);
     if (!operation) {
         throw new Error(`Not supported operation ${operationName}`);
     }

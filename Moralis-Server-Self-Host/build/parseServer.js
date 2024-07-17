@@ -20,8 +20,5 @@ exports.parseServer = new parse_server_1.default({
             module: MoralisEthAdapter_1.default,
         },
     },
-    liveQuery: {
-        classNames: ["Food", "_User", "MessagesOnIPFS"] // List of classes to support for query subscriptions
-    },
 });
 //# sourceMappingURL=parseServer.js.map

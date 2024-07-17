@@ -6,7 +6,7 @@ import { MoralisError, Operation } from '@moralisweb3/common-core';
 import { handleRateLimit } from '../../rateLimit';
 import { upgradeRequest } from '../upgradeRequest'
 import { AxiosError } from 'axios';
-import { operations } from '@moralisweb3/common-evm-utils';
+import { operationsV2All as operations } from '@moralisweb3/common-evm-utils';
 declare const Parse: any;
 
 function getErrorMessage(error: Error, name: string) {
@@ -344,16 +344,8 @@ Parse.Cloud.define("getTokenAllowance", async ({params, user, ip}: any) => {
 })
 
 
-const searchNFTsOperation = getOperation('searchNFTs');
-Parse.Cloud.define("searchNFTs", async ({params, user, ip}: any) => {
-  try {
-    await beforeApiRequest(user, ip, 'searchNFTs');
-    const request = upgradeRequest(params, searchNFTsOperation);
-    const result = await Moralis.EvmApi.nft.searchNFTs(request);
-    return result?.raw;
-  } catch (error) {
-    throw new Error(getErrorMessage(error, 'searchNFTs'));
-  }
+Parse.Cloud.define("searchNFTs", async (_: any) => {
+  throw new Error('searchNFTs is not supported anymore');
 })
 
 

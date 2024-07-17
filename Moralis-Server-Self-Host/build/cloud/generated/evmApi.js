@@ -27,7 +27,7 @@ function getErrorMessage(error, name) {
     return `API error while calling ${name}`;
 }
 function getOperation(operationName) {
-    const operation = common_evm_utils_1.operations.find((o) => o.name === operationName);
+    const operation = common_evm_utils_1.operationsV2All.find((o) => o.name === operationName);
     if (!operation) {
         throw new Error(`Not supported operation ${operationName}`);
     }
@@ -314,17 +314,8 @@ Parse.Cloud.define("getTokenAllowance", async ({ params, user, ip }) => {
         throw new Error(getErrorMessage(error, 'getTokenAllowance'));
     }
 });
-const searchNFTsOperation = getOperation('searchNFTs');
-Parse.Cloud.define("searchNFTs", async ({ params, user, ip }) => {
-    try {
-        await beforeApiRequest(user, ip, 'searchNFTs');
-        const request = (0, upgradeRequest_1.upgradeRequest)(params, searchNFTsOperation);
-        const result = await moralis_1.default.EvmApi.nft.searchNFTs(request);
-        return result === null || result === void 0 ? void 0 : result.raw;
-    }
-    catch (error) {
-        throw new Error(getErrorMessage(error, 'searchNFTs'));
-    }
+Parse.Cloud.define("searchNFTs", async (_) => {
+    throw new Error('searchNFTs is not supported anymore');
 });
 const getNftTransfersFromToBlockOperation = getOperation('getNFTTransfersFromToBlock');
 Parse.Cloud.define("getNftTransfersFromToBlock", async ({ params, user, ip }) => {

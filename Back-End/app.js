@@ -949,7 +949,7 @@ app.post('/api/v1/QuicAI', async (req, res) => {
   try {
     const prompt = req.body.prompt;
     response = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo-0613",
+      model: "gpt-3.5-turbo-0125",
 
       messages: [{ "role": "user", "content": prompt }],
 

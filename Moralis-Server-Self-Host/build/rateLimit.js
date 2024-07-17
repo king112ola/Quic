@@ -19,6 +19,7 @@ const updateRecord = (key) => {
 };
 const redisQuery = async (key) => {
     return new Promise((resolve) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         redisClient.client.ttl(key, async (error, data) => {
             if (data < 0) {
                 resolve(resetTtl(key));
@@ -41,6 +42,7 @@ const checkStatus = async (identifier, requestLimit) => {
     }
     return response;
 };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleRateLimit = async (user, ip) => {
     let status;
     if (user && user.id) {

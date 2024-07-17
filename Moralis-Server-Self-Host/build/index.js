@@ -31,11 +31,11 @@ httpServer.listen(config_1.default.PORT, async () => {
     if (config_1.default.USE_STREAMS) {
         const url = await ngrok_1.default.connect(config_1.default.PORT);
         // eslint-disable-next-line no-console
-        
+        console.log(`Moralis Server is running on port ${config_1.default.PORT} and stream webhook url ${url}${config_1.default.STREAMS_WEBHOOK_URL}`);
     }
     else {
         // eslint-disable-next-line no-console
-        
+        console.log(`Moralis Server is running on port ${config_1.default.PORT}.`);
     }
 });
 // This will enable the Live Query real-time server
