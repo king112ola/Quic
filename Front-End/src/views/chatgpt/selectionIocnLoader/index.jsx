@@ -9,7 +9,7 @@ import { SET_CurrentAiEngine, SET_TranslationMenuOpen } from '~/redux/slices/mes
 
 // import web3 tools 
 import { readContract } from '@wagmi/core';
-import { goerli } from 'wagmi/chains'
+import { sepolia } from 'wagmi/chains'
 import { useAccount } from 'wagmi';
 import _Quic_Ipfs_Storage_Abi from '%/abi/_Quic_Ipfs_Storage_Abi.json'
 
@@ -92,7 +92,7 @@ export const SelectionIconLoader = () => {
                 abi: _Quic_Ipfs_Storage_Abi,
                 functionName: 'premium_Users',
                 args: [address],
-                chainId: goerli.id,
+                chainId: sepolia.id,
                 enabled: false,// dafault true amd will be auto running 
                 overrides: { from: address },
             }

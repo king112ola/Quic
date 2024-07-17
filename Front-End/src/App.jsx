@@ -27,7 +27,7 @@ import { MoralisProvider } from 'react-moralis';
 // import wagmi for interacting with smart contract
 import { configureChains, mainnet, WagmiConfig, createClient } from 'wagmi';
 import { publicProvider} from 'wagmi/providers/public'
-import { goerli } from '@wagmi/chains'
+import { sepolia } from '@wagmi/chains'
 
 //import react pdf 
 import { Worker} from '@react-pdf-viewer/core';
@@ -38,7 +38,7 @@ import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 // configure chains web3.0
 const { provider, webSocketProvider } = configureChains(
-  [goerli],
+  [sepolia],
   [publicProvider()],
 )
 

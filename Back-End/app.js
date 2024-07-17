@@ -208,7 +208,10 @@ const uploadToIpfs_Moralis = async (content, prompt, type) => {
   let resultIpfsLinksOnCfIPFS = JSON.parse(JSON.stringify(resultIpfsLinks).replaceAll('ipfs.moralis.io:2053', 'cf-ipfs.com'))
   let resultIpfsLinksCloudFlareIPFS = JSON.parse(JSON.stringify(resultIpfsLinks).replaceAll('ipfs.moralis.io:2053', 'cloudflare-ipfs.com'))
   let resultIpfsLinksDwebLinkIPFS = JSON.parse(JSON.stringify(resultIpfsLinks).replaceAll('ipfs.moralis.io:2053', 'dweb.link'))
-  return resultIpfsLinksDwebLinkIPFS
+  let resultIpfsLinks4everland = JSON.parse(JSON.stringify(resultIpfsLinks).replaceAll('ipfs.moralis.io:2053', '4everland.io'))
+  let resultIpfsLinksgatewaypinata = JSON.parse(JSON.stringify(resultIpfsLinks).replaceAll('ipfs.moralis.io:2053', 'gateway.pinata.cloud'))
+
+  return resultIpfsLinksgatewaypinata
 }
 
 // download function for getting image form url
@@ -1086,7 +1089,7 @@ app.post('/api/v1/DALLE2', async (req, res) => {
         uploadToIpfs_Moralis(callbacks, prompt, 'DALLE2').then((element) => {
 
           // just a quic switch for better performance , will be removed
-          element[0].imageUrlOnIpfs = url[0]
+          // element[0].imageUrlOnIpfs = url[0]
 
           res.status(200).send(element)
 

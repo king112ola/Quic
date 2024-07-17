@@ -24,7 +24,7 @@ import { useMoralis } from 'react-moralis';
 import { useContractRead } from 'wagmi'
 import { readContract } from '@wagmi/core'
 import _Quic_Ipfs_Storage_Abi from '%/abi/_Quic_Ipfs_Storage_Abi.json'
-import { goerli } from 'wagmi/chains'
+import { sepolia } from 'wagmi/chains'
 import { useAccount, useConnect } from 'wagmi';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { ethers } from "ethers";
@@ -102,7 +102,7 @@ const BlockchainPool = () => {
             from: address,
             value: ethers.utils.parseEther(debouncedFinalBiddingDecision.biddingPrice.toString())
         },
-        // chainId: goerli.id,
+        // chainId: sepolia.id,
         // signerOrProvider: signer,
         enabled: debouncedFinalBiddingDecision.contractEnable // dafault true amd will be auto running 
 
@@ -122,7 +122,7 @@ const BlockchainPool = () => {
                 address: import.meta.env.VITE_QUIC_IPFS_HASH_SMARTCONTRACT,
                 abi: _Quic_Ipfs_Storage_Abi,
                 functionName: 'fetchAmountOfHashsFromPool',
-                chainId: goerli.id,
+                chainId: sepolia.id,
                 enabled: false,// dafault true amd will be auto running 
                 overrides: { from: address },
             }
@@ -142,7 +142,7 @@ const BlockchainPool = () => {
                     abi: _Quic_Ipfs_Storage_Abi,
                     functionName: 'ipfsHash_Pool_List',
                     args: [i.toString()],
-                    chainId: goerli.id,
+                    chainId: sepolia.id,
                     enabled: false,// dafault true amd will be auto running 
                     overrides: { from: address },
                 })
@@ -153,7 +153,7 @@ const BlockchainPool = () => {
                     abi: _Quic_Ipfs_Storage_Abi,
                     functionName: 'ipfsHashPrompt_Pool_List',
                     args: [i.toString()],
-                    chainId: goerli.id,
+                    chainId: sepolia.id,
                     enabled: false,// dafault true amd will be auto running 
                     overrides: { from: address },
                 })
@@ -164,7 +164,7 @@ const BlockchainPool = () => {
                     abi: _Quic_Ipfs_Storage_Abi,
                     functionName: 'ipfsHash_Pool',
                     args: [ipfsHash],
-                    chainId: goerli.id,
+                    chainId: sepolia.id,
                     enabled: false,// dafault true amd will be auto running 
                     overrides: { from: address },
                 })
@@ -358,7 +358,7 @@ const BlockchainPool = () => {
                                         }
 
                                         <Grid align="center" item xs={12} sm={12} sx={{mt:2,mb:0.7, display: priceOfIPFS[item[0]].isBidderSameAsHolder ? "none" : "block" }}>
-
+                                        
                                             <AnimateButton>
 
                                                 <ButtonGroup size="small" aria-label="small outlined button group" sx={{ backgroundColor: theme.palette.grey[50], color: theme.palette.secondary.light }}>

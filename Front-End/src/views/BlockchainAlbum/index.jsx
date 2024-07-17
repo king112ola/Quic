@@ -23,7 +23,7 @@ import { useMoralis } from 'react-moralis';
 import { useContractRead } from 'wagmi'
 import { readContract } from '@wagmi/core'
 import _Quic_Ipfs_Storage_Abi from '%/abi/_Quic_Ipfs_Storage_Abi.json'
-import { goerli } from 'wagmi/chains'
+import { sepolia } from 'wagmi/chains'
 import { useAccount, useConnect } from 'wagmi';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { ethers } from "ethers";
@@ -95,7 +95,7 @@ const BlockchainAlbum = () => {
             value: ethers.utils.parseEther('0.01')
         },
 
-        // chainId: goerli.id,
+        // chainId: sepolia.id,
         // signerOrProvider: signer,
         enabled: contractWriteEnable // dafault true amd will be auto running 
 
@@ -113,7 +113,7 @@ const BlockchainAlbum = () => {
                 address: import.meta.env.VITE_QUIC_IPFS_HASH_SMARTCONTRACT,
                 abi: _Quic_Ipfs_Storage_Abi,
                 functionName: 'fetchAmountOfHashsFromAddress',
-                chainId: goerli.id,
+                chainId: sepolia.id,
                 enabled: false,// dafault true amd will be auto running 
                 overrides: { from: address },
             }
@@ -133,7 +133,7 @@ const BlockchainAlbum = () => {
                     abi: _Quic_Ipfs_Storage_Abi,
                     functionName: 'fetchHashAndPromptFromAddress',
                     args: [i.toString()],
-                    chainId: goerli.id,
+                    chainId: sepolia.id,
                     enabled: false,// dafault true amd will be auto running 
                     overrides: { from: address },
                 })
@@ -143,7 +143,7 @@ const BlockchainAlbum = () => {
                     abi: _Quic_Ipfs_Storage_Abi,
                     functionName: 'ipfsHash_Pool',
                     args: [data[0]],
-                    chainId: goerli.id,
+                    chainId: sepolia.id,
                     enabled: false,// dafault true amd will be auto running 
                     overrides: { from: address },
                 })

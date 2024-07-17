@@ -9,7 +9,7 @@ import MuiTypography from '@mui/material/Typography';
 import { useMoralis } from 'react-moralis';
 import { usePrepareContractWrite, useContractWrite } from 'wagmi';
 import _Quic_Ipfs_Storage_Abi from '%/abi/_Quic_Ipfs_Storage_Abi.json'
-import { goerli } from 'wagmi/chains'
+import { sepolia } from 'wagmi/chains'
 import { useAccount } from 'wagmi';
 import { ethers } from "ethers";
 
@@ -161,7 +161,7 @@ const NotificationSection = () => {
             from: address,
             value: ethers.utils.parseEther('0.01'),
         },
-        chainId: goerli.id,
+        chainId: sepolia.id,
         enabled: true // dafault true amd will be auto running 
     })
 

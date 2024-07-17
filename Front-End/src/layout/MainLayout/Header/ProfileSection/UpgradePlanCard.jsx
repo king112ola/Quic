@@ -8,7 +8,7 @@ import AnimateButton from '~/ui-component/extended/AnimateButton';
 // import react moralis for metamask connect and also wagmi and ether js 
 import { usePrepareContractWrite, useContractWrite } from 'wagmi';
 import _Quic_Ipfs_Storage_Abi from '%/abi/_Quic_Ipfs_Storage_Abi.json'
-import { goerli } from 'wagmi/chains'
+import { sepolia } from 'wagmi/chains'
 import { ethers } from "ethers";
 import { useAccount } from 'wagmi';
 
@@ -61,7 +61,7 @@ const UpgradePlanCard = () => {
             from: address,
             value: ethers.utils.parseEther('0.01'),
         },
-        chainId: goerli.id,
+        chainId: sepolia.id,
         enabled: true // dafault true amd will be auto running 
     })
 
