@@ -48,19 +48,19 @@ contract _Quic_Ipfs_Storage {
 
         // demo data init 
         // images
-        initCons("https://gateway.pinata.cloud/ipfs/QmQeEy3nVbxKBLtBWpc5AqikTupjfxKSfhXRDdRQMBtCAh/DALLE2-39.jpg","ethereal Bohemian Waxwing bird, Bombycilla garrulus :: intricate details, ornate, detailed illustration, octane render :: Johanna Rupprecht style, William Morris style :: trending on artstation --ar 9:16");
-        initCons("https://gateway.pinata.cloud/ipfs/QmYuEE5KQUrTfHVRvwsmMMLuZXx1vLj5hS7ttwfVkSXxB7/DALLE2-42.jpg","aerial view of a giant fish tank shaped like a tower in the middle of new york city, 8k octane render, photorealistic --ar 9:20");
-        initCons("https://gateway.pinata.cloud/ipfs/QmQBECEaVEt7CZtjdZ1DppqBVjhN7h1RBvE9oNkRw2dvPa/DALLE2-46.jpg","Beautiful kingfisher catching a fish, cinematic lighting --beta --ar 2:3 --upbeta");
-        initCons("https://gateway.pinata.cloud/ipfs/QmaVw5eqs3U3pA8tVZPQ7Zjib5TcbAvTdodhMdKVYb91dz/DALLE2-60.jpg","a jewelry design,sakura-themed ring, gemstones and diamonds,luxury, closeup, product view,trending on artstation, cgsociety,ultra quality,digital art, exquisite hyper details,4k,Soft illumination, dreamy,fashion, rendering by unreal engine");
-        initCons("https://gateway.pinata.cloud/ipfs/QmUaYr4FAYJViV4yGQr6wTci1HehdHTNDJr3u9Mrjkcnq3/DALLE2-64.jpg","A real photographic landscape painting with incomparable reality,Super wide,Ominous sky,Sailing boat,Wooden boat,Lotus,Huge waves,Starry night,Harry potter,Volumetric lighting,Clearing,Realistic,James gurney,artstation --ar 9:16||");
-        initCons("https://gateway.pinata.cloud/ipfs/QmU4u5bTQFPJ71FWoSqS2szd3VHHYJKeH9VAUS53dEh3H5/DALLE2-237.jpg","orange looking like water-universe-Earth in the background is a dusty wooden desk, room interior, realistic, abstract art, cinematic bright lighting, colorful, foggy, smokes --ar 16:9");
-        initCons("https://gateway.pinata.cloud/ipfs/QmfH7zsUAyLiwLzWrc5CVugogQVZaMa34gGZFQVQj2s1vN/DALLE2-238.jpg","Synthwave halloween formula 1 car racing on a night road in Singapore");
+        initCons("https://ipfs.moralis.io:2053/ipfs/QmQeEy3nVbxKBLtBWpc5AqikTupjfxKSfhXRDdRQMBtCAh/DALLE2-39.jpg","ethereal Bohemian Waxwing bird, Bombycilla garrulus :: intricate details, ornate, detailed illustration, octane render :: Johanna Rupprecht style, William Morris style :: trending on artstation --ar 9:16");
+        initCons("https://ipfs.moralis.io:2053/ipfs/QmYuEE5KQUrTfHVRvwsmMMLuZXx1vLj5hS7ttwfVkSXxB7/DALLE2-42.jpg","aerial view of a giant fish tank shaped like a tower in the middle of new york city, 8k octane render, photorealistic --ar 9:20");
+        initCons("https://ipfs.moralis.io:2053/ipfs/QmQBECEaVEt7CZtjdZ1DppqBVjhN7h1RBvE9oNkRw2dvPa/DALLE2-46.jpg","Beautiful kingfisher catching a fish, cinematic lighting --beta --ar 2:3 --upbeta");
+        initCons("https://ipfs.moralis.io:2053/ipfs/QmaVw5eqs3U3pA8tVZPQ7Zjib5TcbAvTdodhMdKVYb91dz/DALLE2-60.jpg","a jewelry design,sakura-themed ring, gemstones and diamonds,luxury, closeup, product view,trending on artstation, cgsociety,ultra quality,digital art, exquisite hyper details,4k,Soft illumination, dreamy,fashion, rendering by unreal engine");
+        initCons("https://ipfs.moralis.io:2053/ipfs/QmUaYr4FAYJViV4yGQr6wTci1HehdHTNDJr3u9Mrjkcnq3/DALLE2-64.jpg","A real photographic landscape painting with incomparable reality,Super wide,Ominous sky,Sailing boat,Wooden boat,Lotus,Huge waves,Starry night,Harry potter,Volumetric lighting,Clearing,Realistic,James gurney,artstation --ar 9:16||");
+        initCons("https://ipfs.moralis.io:2053/ipfs/QmU4u5bTQFPJ71FWoSqS2szd3VHHYJKeH9VAUS53dEh3H5/DALLE2-237.jpg","orange looking like water-universe-Earth in the background is a dusty wooden desk, room interior, realistic, abstract art, cinematic bright lighting, colorful, foggy, smokes --ar 16:9");
+        initCons("https://ipfs.moralis.io:2053/ipfs/QmfH7zsUAyLiwLzWrc5CVugogQVZaMa34gGZFQVQj2s1vN/DALLE2-238.jpg","Synthwave halloween formula 1 car racing on a night road in Singapore");
 
         // music
-        initCons("https://gateway.pinata.cloud/ipfs/QmPQngaimFrNtG74ZRhpGuPpjnEjn9Rc1uqJMemRVVVc8w/message-27.RIFFUSION.mp3","Relaxing music should include slow tempo, gentle melodies, soft dynamics, calming sounds, and minimal dissonance to promote relaxation and tranquility.");
-        initCons("https://gateway.pinata.cloud/ipfs/QmdrA6JksT7jncn5c9ArE9funLMnQX27gkRHkEbxTYcE78/message-42.RIFFUSION.mp3","R&B Chilling relax");
-        initCons("https://gateway.pinata.cloud/ipfs/QmVdoSKtAxNXGKiQADkps5YTKMieZhAbTW7Dz7cHd375g1/message-46.RIFFUSION.mp3","- Ambient - Chillout - Meditation - Yoga - Spa - Calm - Peaceful - Soothing - Tranquil - Serene - New Age - Nature Sounds - Instrumental - Sleep - Relaxation - Mindfulness - Healing - Zen - Melodic - Therapeutic - Stress Relief - Deep Sleep");
-        initCons("https://gateway.pinata.cloud/ipfs/QmUtMxoFkEQFLyj7tZTRztqz3wyEPh9uNTbTgEbBVdR7Ep/message-48.RIFFUSION.mp3","one piece fun chill light delightful");
+        initCons("https://ipfs.moralis.io:2053/ipfs/QmPQngaimFrNtG74ZRhpGuPpjnEjn9Rc1uqJMemRVVVc8w/message-27.RIFFUSION.mp3","Relaxing music should include slow tempo, gentle melodies, soft dynamics, calming sounds, and minimal dissonance to promote relaxation and tranquility.");
+        initCons("https://ipfs.moralis.io:2053/ipfs/QmdrA6JksT7jncn5c9ArE9funLMnQX27gkRHkEbxTYcE78/message-42.RIFFUSION.mp3","R&B Chilling relax");
+        initCons("https://ipfs.moralis.io:2053/ipfs/QmVdoSKtAxNXGKiQADkps5YTKMieZhAbTW7Dz7cHd375g1/message-46.RIFFUSION.mp3","- Ambient - Chillout - Meditation - Yoga - Spa - Calm - Peaceful - Soothing - Tranquil - Serene - New Age - Nature Sounds - Instrumental - Sleep - Relaxation - Mindfulness - Healing - Zen - Melodic - Therapeutic - Stress Relief - Deep Sleep");
+        initCons("https://ipfs.moralis.io:2053/ipfs/QmUtMxoFkEQFLyj7tZTRztqz3wyEPh9uNTbTgEbBVdR7Ep/message-48.RIFFUSION.mp3","one piece fun chill light delightful");
 
     }
 
