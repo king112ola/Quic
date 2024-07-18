@@ -36,9 +36,6 @@ import { unmountComponentAtNode, render } from "react-dom";
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { SET_AddMessage, SET_TranslationLanguage, SET_TranslationMenuOpen } from '~/redux/slices/message-related/messageSlice'
 
-// import icons
-import { IconBracketsContain } from '@tabler/icons-react';
-
 // import animation
 import { SelectionIconLoader } from './selectionIocnLoader';
 
@@ -48,7 +45,6 @@ import LanguagesSelection from './languagesSelection'
 // import Api
 import { aiEngineApiCall } from '~/api';
 import ApiCallAndUploadToParseServer from '~/api';
-
 
 // import photo viewer
 import 'react-photo-view/dist/react-photo-view.css';
@@ -88,11 +84,6 @@ const CardForAiSelection = styled(SubCard, { shouldForwardProp })(({ theme }) =>
 
 }));
 
-
-
-
-
-
 // ==============================|| ChatGptIndex ||============================== //
 
 const ChatGptIndex = () => {
@@ -117,20 +108,14 @@ const ChatGptIndex = () => {
     const translationLanguage = useSelector((state) => state.messagesFromUserAndServer.translationLanguage, shallowEqual)
 
     // init the pdf plugin layout
+    // do not remove this defaultLayoutPlugin, it might crash without variable assignment 
     const defaultLayoutPluginInstance = defaultLayoutPlugin();
-
 
     // Create dispatch 
     const dispatch = useDispatch();
 
     // Create a state for the scrolling true not false
     const [isScrolling, setIsScrolling] = useState(false)
-
-    // Create a state to check if the Ai Respond is loading 
-    const [loading, setLoading] = useState(false);
-
-    // state for controlling cursor on / off
-    const [cursorOn, setCursorOn] = useState([]);
 
     // function for displaying/hidding the dropdown menu
     const showDropdownMenu = (id) => {
@@ -172,6 +157,7 @@ const ChatGptIndex = () => {
         STABLEDIFFUSION: 'image',
         OPENJOURNEY: 'image',
         ANYTHING: 'image',
+        MUSICFY: 'audio'
     }
 
     // Defind Ai Engine Name When Output to the user
@@ -186,7 +172,8 @@ const ChatGptIndex = () => {
         STABLEDIFFUSION: 'Stable-Diffusion',
         OPENJOURNEY: 'Openjourney',
         ANYTHING: 'Anything',
-        QuicAI: 'Quic'
+        QuicAI: 'Quic',
+        MUSICFY: 'Musicfy'
     }
 
     // Defind the AI Engines that provides dynamic contents 
@@ -198,7 +185,6 @@ const ChatGptIndex = () => {
     // desireAiEngine only be used when data-chaining happens, if input is from input filed, desireAiEngine will he undefined
     const handleMessageInput = async (inputFromUser, desireAiEngine, hiddenFromUser, inputType, extraConfigPdfTransLanguage) => {
 
-        // =
         // saving the user sending message into redux, change to the desire ai engine when data chaining happens
 
         let responseData
@@ -213,6 +199,7 @@ const ChatGptIndex = () => {
             currentAiEngine: desireAiEngine ?? currentAiEngine,
             hiddenFromUser: hiddenFromUser ?? false
         }))
+        
         try {
 
             responseData = await aiEngineApiCall(inputFromUser, desireAiEngine ?? currentAiEngine, inputType == 'pdf' ? extraConfigPdfTransLanguage : null)
@@ -226,7 +213,7 @@ const ChatGptIndex = () => {
                 currentAiEngine: desireAiEngine ?? currentAiEngine,
             }
 
-            // according to whether the AI Engines is providing Dynamic Content and provide dispatch ations on top
+            // according to whether the AI Engines is providing Dynamic Content and provide dispatch actions on top
             if (dynamicContentAIEngines.includes(currentAiEngine) && !desireAiEngine) {
                 messageToSave.contentType = responseData.filter((e) => e.contentType)[0].contentType
                 dynamicSelectedAiEngine = responseData.filter((e) => e.dynamicSelectedAiEngine)[0].dynamicSelectedAiEngine
@@ -272,6 +259,13 @@ const ChatGptIndex = () => {
                     messageToSave.audioOnIpfs = responseData[0].audioOnIpfs
 
                     break;
+                case 'MUSICFY':
+
+                    messageToSave.messageBody = responseData[0].audioOnIpfs
+                    messageToSave.promptOnIpfs = responseData[1].promptOnIpfs
+                    messageToSave.audioOnIpfs = responseData[0].audioOnIpfs
+
+                    break;
                 case 'PDFTRANSEDEN':
                     // index 2 is the message body in text, 0 and 1 is the location of where the ipfs file stored
                     messageToSave.messageBody = responseData[2].messageBodyInBase64
@@ -294,7 +288,6 @@ const ChatGptIndex = () => {
                     break;
                 case 'OPENJOURNEY':
 
-
                     messageToSave.messageBody = responseData[0].imageUrlOnIpfs
                     messageToSave.promptOnIpfs = responseData[1].promptOnIpfs
                     messageToSave.imageUrlOnIpfs = responseData[0].imageUrlOnIpfs
@@ -307,23 +300,25 @@ const ChatGptIndex = () => {
                     messageToSave.imageUrlOnIpfs = responseData[0].imageUrlOnIpfs
                     break;
 
-
                 default:
                     break;
             }
-            // 
 
         } catch (error) {
-            messageToSave = {
-                id: lastMessageId + 2,
-                sender: desireAiEngine ?? currentAiEngine,
-                contentType: "text",
-                prompt: inputFromUser,
-                currentAiEngine: desireAiEngine ?? currentAiEngine,
-                messageBody: responseData,
-            }
+
+            console.error("Error occurs while handleMessageInput:",error)
+            // messageToSave = {
+            //     id: lastMessageId + 2,
+            //     sender: desireAiEngine ?? currentAiEngine,
+            //     contentType: "text",
+            //     prompt: inputFromUser,
+            //     currentAiEngine: desireAiEngine ?? currentAiEngine,
+            //     messageBody: responseData,
+            // }
 
         }
+
+        console.log("messageToSave:",messageToSave)
 
         dispatch(SET_AddMessage(messageToSave))
 
@@ -337,17 +332,8 @@ const ChatGptIndex = () => {
         }
     }, [messages]);
 
-    useEffect(() => {
-        // make the cursor of the selection menu to be 
-        document.getElementsByClassName('selectionContainer')[0]
-    }, [])
-
-    // 
-
     // Check the screen size
     const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down('sm'));
-
-    const [hideAnimationTag, setHideAnimationTag] = useState(false);
 
     const icon = {
         hidden: {

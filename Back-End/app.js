@@ -44,10 +44,10 @@ const contentType = {
 const Optimum_AI_By_ContentType = {
   "text": "Chatgpt",
   "image": "DALLE2",
-  "music": "RIFFUSION",
+  "music": "MUSICFY",
   "video": "DID",
   "speech": "T2SEDEN",
-  "sound": "RIFFUSION"
+  "sound": "MUSICFY"
 }
 
 const FronEnd_Accepted_ContentType = {
@@ -1014,7 +1014,7 @@ app.post('/api/v1/QuicAI', async (req, res) => {
       parameters: {
         type: "object",
         properties: {
-          requested_content_type: { "type": "string", "enum": ["text", "image", "music", "video", "speech", "sound"] }
+          requested_content_type: { "type": "string", "enum": ["text", "image", "music", "video", "speech"] }
         },
         required: ["requested_content_type"],
       },

@@ -179,26 +179,27 @@ export const SelectionIconLoader = () => {
                         >
                             <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine()}>Display All.</motion.h5>
                             <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('QuicAI')}>Quic Ai.</motion.h5>
-                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('Chatgpt')}>Chatgpt Ai.</motion.h5>
-                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('DALLE2')}>DALL·E 2.</motion.h5>
-                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('SAMSUM')}>Samsum Ai.</motion.h5>
-                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('RIFFUSION')}>Riffusion.</motion.h5>
-                            <motion.h5 style={{ width: '70px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('STABLEDIFFUSION')}>Stable-Diffusion.</motion.h5>
-                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('T2SEDEN')}>T2S Eden.</motion.h5>
-                            <motion.h5 style={{ width: isSmallScreen ? '90px' : '80px' }} className="selectionItem" onClick={() => { handleChangeFilterAiEngine('PDFTRANSEDEN') }} > DOC. TRANS Eden. </motion.h5>
-                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('DID')}>D-ID.</motion.h5>
-                            <motion.h5 style={{ width: '70px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('OPENJOURNEY')}>Openjourney Ai.</motion.h5>
+                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('Chatgpt')}>Chatgpt</motion.h5>
+                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('DALLE2')}>DALL·E</motion.h5>
+                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('MUSICFY')}>Musicfy</motion.h5>
+                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('SAMSUM')}>Samsum</motion.h5>
+                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('RIFFUSION')}>Riffusion</motion.h5>
+                            <motion.h5 style={{ width: '70px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('STABLEDIFFUSION')}>Stable-Diffusion</motion.h5>
+                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('T2SEDEN')}>T2S Eden</motion.h5>
+                            <motion.h5 style={{ width: isSmallScreen ? '90px' : '80px' }} className="selectionItem" onClick={() => { handleChangeFilterAiEngine('PDFTRANSEDEN') }} > PDF Translation Eden</motion.h5>
+                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('DID')}>D-ID</motion.h5>
+                            <motion.h5 style={{ width: '70px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('OPENJOURNEY')}>Openjourney</motion.h5>
                             <motion.h5 style={{ width: '70px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('ANYTHING')}>Anything-v4.0</motion.h5>
-                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('DID')}></motion.h5>
-                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('DID')}></motion.h5>
-                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('DID')}></motion.h5>
-                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('DID')}></motion.h5>
-                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('DID')}></motion.h5>
-                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('DID')}></motion.h5>
-                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('DID')}></motion.h5>
-                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('DID')}></motion.h5>
-                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('DID')}></motion.h5>
-                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('DID')}></motion.h5>
+                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('')}></motion.h5>
+                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('')}></motion.h5>
+                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('')}></motion.h5>
+                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('')}></motion.h5>
+                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('')}></motion.h5>
+                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('')}></motion.h5>
+                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('')}></motion.h5>
+                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('')}></motion.h5>
+                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('')}></motion.h5>
+                            <motion.h5 style={{ width: '60px' }} className="selectionItem" onClick={() => handleChangeFilterAiEngine('')}></motion.h5>
                         </motion.div>}
 
                 </motion.div>

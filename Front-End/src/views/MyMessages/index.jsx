@@ -73,7 +73,8 @@ const aiEngineNameOutputToScreen = {
     T2SEDEN: 'Eden T2S',
     PDFTRANSEDEN: 'Eden Doc. Trans.',
     RIFFUSION: 'Riffusion',
-    QuicAI: 'Quic'
+    QuicAI: 'Quic',
+    MUSICFY: 'Musicfy'
 }
 
 // Create the own card format for Chatgpt
@@ -214,6 +215,9 @@ const ChatGptIndex = () => {
                 case 'T2SEDEN':
                     messageRecordObject.messageBody = attributes.Message
                     break;
+                case 'MUSICFY':
+                    messageRecordObject.messageBody = attributes.Message
+                    break;
                 case 'PDFTRANSEDEN':
                     messageRecordObject.messageBody = attributes.Message
                     break;
@@ -235,7 +239,7 @@ const ChatGptIndex = () => {
                     messageRecordObject.messageBody = attributes.Message
                     messageRecordObject.imageUrlOnIpfs = attributes.Message
                     break;
-
+                
 
 
                 default:
@@ -248,7 +252,7 @@ const ChatGptIndex = () => {
         dispatch(SET_AddMessageRecords(messageRecordsTobeShown))
 
     }
-    // 
+    
     useEffect(() => {
 
         if (user)
@@ -257,21 +261,6 @@ const ChatGptIndex = () => {
     }, [user]);
     // Check the screen size
     const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down('sm'));
-
-    const [hideAnimationTag, setHideAnimationTag] = useState(false);
-
-    const icon = {
-        hidden: {
-            opacity: 0,
-            pathLength: 0,
-            fill: "rgba(255, 255, 255, 0)"
-        },
-        visible: {
-            opacity: 1,
-            pathLength: 1
-        }
-    };
-
 
     return (
         <>

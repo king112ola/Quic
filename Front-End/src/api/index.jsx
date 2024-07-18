@@ -178,6 +178,27 @@ export const T2SEDENApiCall = async (inputFromUser) => {
     return data ?? "Request for one more time!"
 }
 
+// Music Generation AI api fetch
+export const MUSICFYApiCall = async (inputFromUser) => {
+
+    const response = await fetch(apiEndpointOnBackend + '/api/v1/MUSICFY', {
+        method: 'POST',
+        headers: {
+            "ngrok-skip-browser-warning": "620",
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            prompt: inputFromUser
+        })
+    })
+
+    // error if the respond is incorrect
+    errorChecking(response)
+
+    const data = await response.json()
+    return data ?? "Request for one more time!"
+}
+
 // Document translate AI Api call
 export const PDFTRANSEDENApiCall = async (inputFromUser, translationLanguage) => {
 
@@ -366,10 +387,22 @@ const apiCallIndex = () => {
      * End Of creating this moralis server function handler
      */
 
-
+    // #TODO The back end server should handle the message upload but not the client
     // function that adds the new comming ipfs hashed message link to the mongo db, with moralis parse server
     async function addMessageToDatabase(sentFromAi, userID, aiEngineUsing, newContentType, newMessageID, newSender, newMessage, newMessageOnIpfs, newPromptOnIpfs, newPrompt,dynamicSelectedAiEngine) {
 
+        // console.log('sentFromAi:', sentFromAi);
+        // console.log('userID:', userID);
+        // console.log('aiEngineUsing:', aiEngineUsing);
+        // console.log('newContentType:', newContentType);
+        // console.log('newMessageID:', newMessageID);
+        // console.log('newSender:', newSender);
+        // console.log('newMessage:', newMessage);
+        // console.log('newMessageOnIpfs:', newMessageOnIpfs);
+        // console.log('newPromptOnIpfs:', newPromptOnIpfs);
+        // console.log('newPrompt:', newPrompt);
+        // console.log('dynamicSelectedAiEngine:', dynamicSelectedAiEngine);
+        
         const MessagesOnIPFS = Moralis.Object.extend("MessagesOnIPFS");
         const query = new Moralis.Query("MessagesOnIPFS");
 
@@ -382,7 +415,6 @@ const apiCallIndex = () => {
             messageCreator.set('PromptOnIpfs', newPromptOnIpfs)
 
         }
-
 
         messageCreator.set('UserID', userID)
 
@@ -405,6 +437,7 @@ const apiCallIndex = () => {
 
 
     // triggered when every time a new message arrives
+    // The goal is to store the conversation between the user and the AI Engines
     useEffect(() => {
 
         // very important, use this checking to see if the user is comming back to the chatgpt pgae. and if the old record is same as the current message, do not upload to database
@@ -423,6 +456,7 @@ const apiCallIndex = () => {
             if (!lastMessage) return
 
             // handle user input and save as new message
+            // TODO: Not only allow the user to send text base content, but also pictures/audio/video
             if (lastMessage.sender == 'User') {
                 addMessageToDatabase(false, user.id, lastMessage.currentAiEngine, lastMessage.contentType, lastMessage.id, lastMessage.sender, lastMessage.messageBody)
             }
@@ -432,7 +466,7 @@ const apiCallIndex = () => {
                 const dynamicDecideAddMessageToDatabase = {
                     'text': ()=>addMessageToDatabase(true, user.id, lastMessage.currentAiEngine, lastMessage.contentType, lastMessage.id, lastMessage.sender, lastMessage.messageBody, lastMessage.ChatgptMessageOnIpfs, lastMessage.promptOnIpfs, lastMessage.prompt,lastMessage.dynamicSelectedAiEngine),
                     'image': ()=>addMessageToDatabase(true, user.id, lastMessage.currentAiEngine, lastMessage.contentType, lastMessage.id, lastMessage.sender, lastMessage.imageUrlOnIpfs, lastMessage.imageUrlOnIpfs, lastMessage.promptOnIpfs, lastMessage.prompt,lastMessage.dynamicSelectedAiEngine),
-                    'audio':()=>addMessageToDatabase(true, user.id, lastMessage.currentAiEngine, lastMessage.contentType, lastMessage.id, lastMessage.sender, lastMessage.messageBody, lastMessage.audioOnIpfs, lastMessage.promptOnIpfs, lastMessage.prompt)
+                    'audio':()=>addMessageToDatabase(true, user.id, lastMessage.currentAiEngine, lastMessage.contentType, lastMessage.id, lastMessage.sender, lastMessage.messageBody, lastMessage.audioOnIpfs, lastMessage.promptOnIpfs, lastMessage.prompt,lastMessage.dynamicSelectedAiEngine),
                 }
 
                 switch (lastMessage.sender) {
@@ -449,6 +483,9 @@ const apiCallIndex = () => {
                         addMessageToDatabase(true, user.id, lastMessage.currentAiEngine, lastMessage.contentType, lastMessage.id, lastMessage.sender, lastMessage.messageBody, lastMessage.SAMSUMMessageOnIpfs, lastMessage.promptOnIpfs, lastMessage.prompt)
                         break;
                     case 'T2SEDEN':
+                        addMessageToDatabase(true, user.id, lastMessage.currentAiEngine, lastMessage.contentType, lastMessage.id, lastMessage.sender, lastMessage.messageBody, lastMessage.audioOnIpfs, lastMessage.promptOnIpfs, lastMessage.prompt)
+                        break;
+                    case 'MUSICFY':
                         addMessageToDatabase(true, user.id, lastMessage.currentAiEngine, lastMessage.contentType, lastMessage.id, lastMessage.sender, lastMessage.messageBody, lastMessage.audioOnIpfs, lastMessage.promptOnIpfs, lastMessage.prompt)
                         break;
                     case 'PDFTRANSEDEN':
@@ -483,7 +520,6 @@ const apiCallIndex = () => {
 // Api router 
 export const aiEngineApiCall = (inputFromUser, aiEngineToUse, translationLanguage) => {
 
-    // 
     switch (aiEngineToUse) {
         case 'Chatgpt':
             return ChatgptApiCall(inputFromUser)
@@ -507,7 +543,8 @@ export const aiEngineApiCall = (inputFromUser, aiEngineToUse, translationLanguag
             return ANYTHINGApiCall(inputFromUser)
         case 'QuicAI':
             return QuicAIApiCall(inputFromUser)
-
+        case 'MUSICFY':
+            return MUSICFYApiCall(inputFromUser)
         default:
             break;
     }

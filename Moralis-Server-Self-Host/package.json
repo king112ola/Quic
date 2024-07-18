@@ -16,6 +16,7 @@
     "graphql-ws": "^5.10.1",
     "moralis": "^2.26.9",
     "ngrok": "^4.3.3",
+    "parse-dashboard": "^5.4.0",
     "parse-server": "^5.4.0"
   },
   "devDependencies": {
@@ -45,6 +46,7 @@
     "dev:db-start": "mongodb-runner start",
     "dev:db-stop": "mongodb-runner stop",
     "gen:cloud": "ts-node ./scripts/generateCloudCode.ts",
+    "dashboard": "parse-dashboard --dev --port 2121 --appId 001 --masterKey securedmastermasterkeeyyyyy --serverURL \"http://localhost:1337/server\" --appName quic",
     "tsc": "tsc"
   }
 }
