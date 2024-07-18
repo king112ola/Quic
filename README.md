@@ -31,6 +31,7 @@ Quic is a platform that connects various publicly available large-scale AI engin
 * Run local backend development server using: `node server.js`
 
 ### Moralis-Server-Self-Host Directory:
+* First, build the Moralis Self Host Parse Server with the command: `npm run build`
 * Start the Moralis Self Host Parse Server with the command: `npm run dev`
 * Monitor the MongoDB with the parse-dashboard using the command: `npm run dashboard`
 
