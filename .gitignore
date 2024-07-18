@@ -6,9 +6,7 @@ Front-End/_redirects
 Moralis-Server-Self-Host/.env
 /Moralis-Server-Self-Host/node_modules
 /.vscode
-/Back-End/img
+/Back-End/img/*
 /Moralis-Server-Self-Host/logs
-/Back-End/audio
-/Back-End/pdf
-/Back-End/audio
+/Back-End/pdf/*
 /Moralis-Server-Self-Host/build
