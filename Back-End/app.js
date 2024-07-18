@@ -12,7 +12,12 @@ const config = require('./config.json')
 // constructing formdata for file upload
 var FormData = require('form-data');
 // import fetch 
+
+// TODO: change all fetch to axios
 const fetch = require('node-fetch');
+const createProxyAxiosInstance = require('./utils/customAxios');
+const proxyAxiosInstance = createProxyAxiosInstance(process.env.USE_PROXY_PAC);
+
 const fetchWithRetry = require('node-fetch-retry');
 
 // base64 to blob
@@ -303,22 +308,21 @@ const downloadT2SEDENAudio = (url, dest, cb) => {
 // set up open Ai
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
+  baseOptions: {
+    httpAgent: proxyAxiosInstance.defaults.httpAgent,
+    httpsAgent: proxyAxiosInstance.defaults.httpsAgent,
+  },
 });
 const openai = new OpenAIApi(configuration);
 
 // set up Hugging Face
 const HuggingFaceApiKey = process.env.HUGGINGFACE_API_KEY
 
+// set up express
 const app = express()
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors())
-
-app.get('/', async (req, res) => {
-  res.status(200).send({
-    message: 'Hello!'
-  })
-})
 
 // handeling request to stsable deffision 
 app.post('/api/v1/STABLEDIFFUSION', async (req, res) => {
