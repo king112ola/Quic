@@ -216,7 +216,7 @@ const uploadToIpfs_Moralis = async (content, prompt, type) => {
   let resultIpfsLinks4everland = JSON.parse(JSON.stringify(resultIpfsLinks).replaceAll('ipfs.moralis.io:2053', '4everland.io'))
   let resultIpfsLinksgatewaypinata = JSON.parse(JSON.stringify(resultIpfsLinks).replaceAll('ipfs.moralis.io:2053', 'gateway.pinata.cloud'))
 
-  return resultIpfsLinksgatewaypinata
+  return resultIpfsLinks
 }
 
 // download function for getting image form url
