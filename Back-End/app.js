@@ -2,7 +2,7 @@ const express = require('express')
 require("dotenv").config()
 const cors = require('cors')
 const { Configuration, OpenAIApi } = require('openai')
-const path = require('path')
+const crypto = require('crypto');
 
 // download the image and save to /img
 const fs = require('fs')
@@ -11,17 +11,16 @@ const config = require('./config.json')
 
 // constructing formdata for file upload
 var FormData = require('form-data');
-// import fetch 
 
 // TODO: change all fetch to axios
 const fetch = require('node-fetch');
 const createProxyAxiosInstance = require('./utils/customAxios');
 const proxyAxiosInstance = createProxyAxiosInstance(process.env.USE_PROXY_PAC);
-
 const fetchWithRetry = require('node-fetch-retry');
 
-// base64 to blob
-const { base64ToBlob, blobToBase64 } = require('base64-blob')
+// In-memory session storage
+const sessions = new Map();
+const SESSION_TIMEOUT = 8 * 60 * 1000; // 8 minutes
 
 // Defind Localhost Server 
 const quicServerUrl = process.env.QUIC_ONLINE_BACK_END_URL ?? "http://localhost:5000"
@@ -359,6 +358,30 @@ const app = express()
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors())
+
+const logConversation = (sessionId, role, content) => {
+  const session = sessions.get(sessionId);
+  if (session) {
+    session.history.push({ role, content });
+  }
+};
+
+// Middleware to generate/manage session ID and update last activity time
+app.use((req, res, next) => {
+  let sessionId = req.header('X-Session-ID');
+  console.log(sessionId)
+  if (!sessionId) {
+    sessionId = crypto.randomBytes(16).toString('hex');
+    res.setHeader('X-Session-ID', sessionId);
+  }
+  if (!sessions.has(sessionId)) {
+    sessions.set(sessionId, { history: [], lastActivity: Date.now() });
+  } else {
+    sessions.get(sessionId).lastActivity = Date.now();
+  }
+  req.sessionId = sessionId;
+  next();
+});
 
 // handeling request to stsable deffision 
 app.post('/api/v1/STABLEDIFFUSION', async (req, res) => {
@@ -1033,6 +1056,7 @@ app.post('/api/v1/QuicAI', async (req, res) => {
 
   try {
     const prompt = req.body.prompt;
+    const sessionId = req.sessionId;
     response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo-0125",
 
@@ -1051,7 +1075,8 @@ app.post('/api/v1/QuicAI', async (req, res) => {
       method: "POST",
       headers: {
         "ngrok-skip-browser-warning": "620",
-        'Content-type': 'application/json'
+        'Content-type': 'application/json',
+        'X-Session-ID': sessionId, 
       },
       body: JSON.stringify({
         prompt: prompt
@@ -1084,17 +1109,20 @@ app.post('/api/v1/QuicAI', async (req, res) => {
 // TODO: Extract each api method and separte them into different services
 const triggerChatgptWorkflow = async (req, res) => {
 
-  try {
-    if (!req.body.prompt) {
-      console.log("Error missing argument");
-      res.status(500).send(error || 'Missing argument in prompt.');
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send(error || 'Missing argument in prompt.');
+  const { prompt } = req.body;
+  if (!prompt) {
+    return res.status(400).send('Missing argument in prompt.');
   }
-  // update last message number
-  // model for "gpt - 3.5 - turbo"
+  const sessionId = req.sessionId;
+  console.log(`Session ID: ${sessionId}`);
+
+  const session = sessions.get(sessionId);
+  if (!session) {
+    return res.status(500).send('Session not found.');
+  }
+  const conversationHistory = session.history;
+
+  logConversation(sessionId, 'user', prompt);
 
   // store and add the number if the chatgot message
   config.lastChatgpt_Text_IDNumber += 1
@@ -1104,26 +1132,16 @@ const triggerChatgptWorkflow = async (req, res) => {
     const prompt = req.body.prompt;
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
-      messages: [{ "role": "user", "content": prompt }],
+      messages: conversationHistory,
       max_tokens: 1000,
     })
 
-    // model for "text-davinci-003"
+    const chatgptReply = response.data.choices[0].message.content.trim();
+    logConversation(sessionId, 'assistant', chatgptReply);
 
-    // const response = await openai.createCompletion({
-    //   model: "text-davinci-003",
-    //   prompt: `${prompt}`,
-    //   temperature: 0, // Higher values means the model will take more risks.
-    //   max_tokens: 3000, // The maximum number of tokens to generate in the completion. Most models have a context length of 2048 tokens (except for the newest models, which support 4096).
-    //   top_p: 1, // alternative to sampling with temperature, called nucleus sampling
-    //   frequency_penalty: 0.5, // Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.
-    //   presence_penalty: 0, // Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
-    // });
+    let uploadedIpfsMessage = await uploadToIpfs_Moralis(chatgptReply, prompt, 'Chatgpt')
 
-
-    let uploadedIpfsMessage = await uploadToIpfs_Moralis(response.data.choices[0].message.content.trim(), prompt, 'Chatgpt')
-
-    uploadedIpfsMessage.push({ messageBodyInText: response.data.choices[0].message.content.trim() })
+    uploadedIpfsMessage.push({ messageBodyInText: chatgptReply })
 
     res.status(200).send(uploadedIpfsMessage);
 
@@ -1136,6 +1154,16 @@ const triggerChatgptWorkflow = async (req, res) => {
 
 // handleing chatgpt api call
 app.post('/api/v1/Chatgpt', triggerChatgptWorkflow)
+
+// Periodic cleanup function to remove inactive sessions
+setInterval(() => {
+  const now = Date.now();
+  for (const [sessionId, session] of sessions.entries()) {
+    if (now - session.lastActivity > SESSION_TIMEOUT) {
+      sessions.delete(sessionId);
+    }
+  }
+}, SESSION_TIMEOUT);
 
 // handle DALL·E 2 api call
 app.post('/api/v1/DALLE2', async (req, res) => {

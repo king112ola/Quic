@@ -3,37 +3,38 @@ const apiEndpointOnBackend = import.meta.env.VITE_QUIC_BACKEND_SERVER
 
 // import react moralis for mongo db connection
 import { useMoralis } from 'react-moralis';
-import Moralis from 'moralis-v1';
 
 // import redux
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import {useSelector, shallowEqual } from 'react-redux';
 
 // React Hooks
 import { useEffect, useState } from "react";
-
 
 // error handler
 const errorChecking = (response) => {
     if (!response.ok) throw new Error("Failed to generate Ai Response");
 }
 
-// blob to base64 convert
-function blobToBase64(blob) {
-    return new Promise((resolve, _) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result);
-        reader.readAsDataURL(blob);
-    });
-}
+// Function to get or create session ID
+const getSessionId = () => {
+    let sessionId = localStorage.getItem('sessionId');
+    if (!sessionId) {
+        sessionId = [...Array(30)].map(() => Math.random().toString(36)[2]).join('');
+        localStorage.setItem('sessionId', sessionId);
+    }
+    return sessionId;
+};
 
 // Quic AI api fetch
 export const QuicAIApiCall = async (inputFromUser) => {
     try {
+        const sessionId = getSessionId();
         const response = await fetch(apiEndpointOnBackend + '/api/v1/QuicAI', {
             method: 'POST',
             headers: {
                 "ngrok-skip-browser-warning": "620",
-                'Content-type': 'application/json'
+                'Content-type': 'application/json',
+                'X-Session-ID': sessionId,
             },
             body: JSON.stringify({
                 prompt: inputFromUser
@@ -54,11 +55,13 @@ export const QuicAIApiCall = async (inputFromUser) => {
 // Chatgpt api fetch
 export const ChatgptApiCall = async (inputFromUser) => {
     try {
+        const sessionId = getSessionId();
         const response = await fetch(apiEndpointOnBackend + '/api/v1/Chatgpt', {
             method: 'POST',
             headers: {
                 "ngrok-skip-browser-warning": "620",
-                'Content-type': 'application/json'
+                'Content-type': 'application/json',
+                'X-Session-ID': sessionId,
             },
             body: JSON.stringify({
                 prompt: inputFromUser
@@ -80,15 +83,17 @@ export const ChatgptApiCall = async (inputFromUser) => {
 // DALLE2 image ai api call
 export const DALLE2ApiCall = async (inputFromUser, numberOfImages, imageSize) => {
     try {
+        const sessionId = getSessionId();
         inputFromUser = inputFromUser ?? ''
         numberOfImages = numberOfImages ?? 1
         imageSize = imageSize ?? '1024x1024'
-
+        
         const response = await fetch(apiEndpointOnBackend + '/api/v1/DALLE2', {
             method: 'POST',
             headers: {
                 "ngrok-skip-browser-warning": "69120",
-                'Content-type': 'application/json'
+                'Content-type': 'application/json',
+                'X-Session-ID': sessionId,
             },
             body: JSON.stringify({
                 prompt: inputFromUser,
@@ -96,35 +101,35 @@ export const DALLE2ApiCall = async (inputFromUser, numberOfImages, imageSize) =>
                 imageSize: imageSize,
             })
         })
-   
+
         // error if the respond is incorrect
         errorChecking(response)
         let imageData = await response.json()
-      
+
         return imageData
     }
- 
+
     catch (error) {
         return "Something went wrong, please try again!"
     }
-  
+
 }
 
 // D-ID image ai api call
 export const DIDApiCall = async (inputFromUser, numberOfImages, imageSize) => {
-    // 
-
+    const sessionId = getSessionId();
     const response = await fetch(apiEndpointOnBackend + '/api/v1/DID', {
         method: 'POST',
         headers: {
             "ngrok-skip-browser-warning": "69120",
-            'Content-type': 'application/json'
+            'Content-type': 'application/json',
+            'X-Session-ID': sessionId,
         },
         body: JSON.stringify({
             prompt: inputFromUser
         })
     })
-  
+
     // error if the respond is incorrect
     errorChecking(response)
 
@@ -137,12 +142,14 @@ export const DIDApiCall = async (inputFromUser, numberOfImages, imageSize) => {
 
 // Samsum api fetch
 export const SAMSUMApiCall = async (inputFromUser) => {
-
+    const sessionId = getSessionId();
     const response = await fetch(apiEndpointOnBackend + '/api/v1/SAMSUM', {
         method: 'POST',
         headers: {
             "ngrok-skip-browser-warning": "620",
-            'Content-type': 'application/json'
+            'Content-type': 'application/json',
+            'X-Session-ID': sessionId,
+            
         },
         body: JSON.stringify({
             prompt: inputFromUser
@@ -159,12 +166,13 @@ export const SAMSUMApiCall = async (inputFromUser) => {
 
 // Text to Speech Eden api fetch
 export const T2SEDENApiCall = async (inputFromUser) => {
-
+    const sessionId = getSessionId();
     const response = await fetch(apiEndpointOnBackend + '/api/v1/T2SEDEN', {
         method: 'POST',
         headers: {
             "ngrok-skip-browser-warning": "620",
-            'Content-type': 'application/json'
+            'Content-type': 'application/json',
+            'X-Session-ID': sessionId,
         },
         body: JSON.stringify({
             prompt: inputFromUser
@@ -180,12 +188,13 @@ export const T2SEDENApiCall = async (inputFromUser) => {
 
 // Music Generation AI api fetch
 export const MUSICFYApiCall = async (inputFromUser) => {
-
+    const sessionId = getSessionId();
     const response = await fetch(apiEndpointOnBackend + '/api/v1/MUSICFY', {
         method: 'POST',
         headers: {
             "ngrok-skip-browser-warning": "620",
-            'Content-type': 'application/json'
+            'Content-type': 'application/json',
+            'X-Session-ID': sessionId,
         },
         body: JSON.stringify({
             prompt: inputFromUser
@@ -201,12 +210,13 @@ export const MUSICFYApiCall = async (inputFromUser) => {
 
 // Document translate AI Api call
 export const PDFTRANSEDENApiCall = async (inputFromUser, translationLanguage) => {
-
+    const sessionId = getSessionId();
     const response = await fetch(import.meta.env.VITE_QUIC_BACKEND_SERVER + '/api/v1/PDFTRANSEDEN', {
         method: 'POST',
         headers: {
             "ngrok-skip-browser-warning": "620",
-            'Content-type': 'application/json'
+            'Content-type': 'application/json',
+            'X-Session-ID': sessionId,
         },
         body: JSON.stringify({
             uploadedPdf: inputFromUser,
@@ -223,12 +233,13 @@ export const PDFTRANSEDENApiCall = async (inputFromUser, translationLanguage) =>
 // back end api call for stable diffusion 
 
 const STABLEDIFFUSIONApiCall = async (inputFromUser) => {
-
+    const sessionId = getSessionId();
     const response = await fetch(apiEndpointOnBackend + '/api/v1/STABLEDIFFUSION', {
         method: 'POST',
         headers: {
             "ngrok-skip-browser-warning": "620",
-            'Content-type': 'application/json'
+            'Content-type': 'application/json',
+            'X-Session-ID': sessionId,
         },
         body: JSON.stringify({
             prompt: inputFromUser
@@ -245,11 +256,13 @@ const STABLEDIFFUSIONApiCall = async (inputFromUser) => {
 
 // back end api call for openjourney 
 const OPENJOURNEYApiCall = async (inputFromUser) => {
+    const sessionId = getSessionId();
     const response = await fetch(apiEndpointOnBackend + '/api/v1/OPENJOURNEY', {
         method: 'POST',
         headers: {
             "ngrok-skip-browser-warning": "620",
-            'Content-type': 'application/json'
+            'Content-type': 'application/json',
+            'X-Session-ID': sessionId,
         },
         body: JSON.stringify({
             prompt: inputFromUser
@@ -265,11 +278,13 @@ const OPENJOURNEYApiCall = async (inputFromUser) => {
 
 // back end api call for anything ai
 const ANYTHINGApiCall = async (inputFromUser) => {
+    const sessionId = getSessionId();
     const response = await fetch(apiEndpointOnBackend + '/api/v1/ANYTHING', {
         method: 'POST',
         headers: {
             "ngrok-skip-browser-warning": "620",
-            'Content-type': 'application/json'
+            'Content-type': 'application/json',
+            'X-Session-ID': sessionId,
         },
         body: JSON.stringify({
             prompt: inputFromUser
@@ -298,12 +313,13 @@ export const RIFFUSIONApiCall = async (inputFromUser) => {
         startPrompt = inputFromUser
     }
 
-
+    const sessionId = getSessionId();
     const response = await fetch(import.meta.env.VITE_QUIC_BACKEND_SERVER + '/api/v1/RIFFUSION', {
         method: 'POST',
         headers: {
             "ngrok-skip-browser-warning": "620",
-            'Content-type': 'application/json'
+            'Content-type': 'application/json',
+            'X-Session-ID': sessionId,
         },
         body: JSON.stringify({
             start: startPrompt.replace(/(\r\n|\n|\r)/gm, ""),
@@ -318,11 +334,7 @@ export const RIFFUSIONApiCall = async (inputFromUser) => {
 
 }
 
-
-
 const apiCallIndex = () => {
-
-
 
     // Load message/ Init message from Redux store
     const messages = useSelector((state) => state.messagesFromUserAndServer.messages, shallowEqual)
@@ -389,7 +401,7 @@ const apiCallIndex = () => {
 
     // #TODO The back end server should handle the message upload but not the client
     // function that adds the new comming ipfs hashed message link to the mongo db, with moralis parse server
-    async function addMessageToDatabase(sentFromAi, userID, aiEngineUsing, newContentType, newMessageID, newSender, newMessage, newMessageOnIpfs, newPromptOnIpfs, newPrompt,dynamicSelectedAiEngine) {
+    async function addMessageToDatabase(sentFromAi, userID, aiEngineUsing, newContentType, newMessageID, newSender, newMessage, newMessageOnIpfs, newPromptOnIpfs, newPrompt, dynamicSelectedAiEngine) {
 
         // console.log('sentFromAi:', sentFromAi);
         // console.log('userID:', userID);
@@ -402,7 +414,7 @@ const apiCallIndex = () => {
         // console.log('newPromptOnIpfs:', newPromptOnIpfs);
         // console.log('newPrompt:', newPrompt);
         // console.log('dynamicSelectedAiEngine:', dynamicSelectedAiEngine);
-        
+
         const MessagesOnIPFS = Moralis.Object.extend("MessagesOnIPFS");
         const query = new Moralis.Query("MessagesOnIPFS");
 
@@ -441,10 +453,10 @@ const apiCallIndex = () => {
     useEffect(() => {
 
         // very important, use this checking to see if the user is comming back to the chatgpt pgae. and if the old record is same as the current message, do not upload to database
- 
+
         let pass = true
         if (messages !== undefined && messageRecords !== undefined) {
-   
+
             pass = !(messages[messages.length - 1]?.id == messageRecords[messageRecords.length - 1]?.oldID)
         }
 
@@ -464,9 +476,9 @@ const apiCallIndex = () => {
 
                 // Determin the uploading content arguments dynamically
                 const dynamicDecideAddMessageToDatabase = {
-                    'text': ()=>addMessageToDatabase(true, user.id, lastMessage.currentAiEngine, lastMessage.contentType, lastMessage.id, lastMessage.sender, lastMessage.messageBody, lastMessage.ChatgptMessageOnIpfs, lastMessage.promptOnIpfs, lastMessage.prompt,lastMessage.dynamicSelectedAiEngine),
-                    'image': ()=>addMessageToDatabase(true, user.id, lastMessage.currentAiEngine, lastMessage.contentType, lastMessage.id, lastMessage.sender, lastMessage.imageUrlOnIpfs, lastMessage.imageUrlOnIpfs, lastMessage.promptOnIpfs, lastMessage.prompt,lastMessage.dynamicSelectedAiEngine),
-                    'audio':()=>addMessageToDatabase(true, user.id, lastMessage.currentAiEngine, lastMessage.contentType, lastMessage.id, lastMessage.sender, lastMessage.messageBody, lastMessage.audioOnIpfs, lastMessage.promptOnIpfs, lastMessage.prompt,lastMessage.dynamicSelectedAiEngine),
+                    'text': () => addMessageToDatabase(true, user.id, lastMessage.currentAiEngine, lastMessage.contentType, lastMessage.id, lastMessage.sender, lastMessage.messageBody, lastMessage.ChatgptMessageOnIpfs, lastMessage.promptOnIpfs, lastMessage.prompt, lastMessage.dynamicSelectedAiEngine),
+                    'image': () => addMessageToDatabase(true, user.id, lastMessage.currentAiEngine, lastMessage.contentType, lastMessage.id, lastMessage.sender, lastMessage.imageUrlOnIpfs, lastMessage.imageUrlOnIpfs, lastMessage.promptOnIpfs, lastMessage.prompt, lastMessage.dynamicSelectedAiEngine),
+                    'audio': () => addMessageToDatabase(true, user.id, lastMessage.currentAiEngine, lastMessage.contentType, lastMessage.id, lastMessage.sender, lastMessage.messageBody, lastMessage.audioOnIpfs, lastMessage.promptOnIpfs, lastMessage.prompt, lastMessage.dynamicSelectedAiEngine),
                 }
 
                 switch (lastMessage.sender) {
