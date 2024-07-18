@@ -194,7 +194,6 @@ const ChatGptIndex = () => {
                 dynamicSelectedAiEngine = attributes.dynamicSelectedAiEngine
             }
 
-
             switch (dynamicSelectedAiEngine ?? attributes.Message_Sender) {
                 case 'User':
                     messageRecordObject.messageBody = attributes.Message
@@ -335,16 +334,16 @@ const ChatGptIndex = () => {
                                                     ,
 
                                                     'image':
-
+                                                    
                                                         <SubCard sx={{ maxWidth: '400px', maxHeight: '400px' }} >
 
-                                                            <PhotoView src={message.imageUrlOnIpfs} key={`${message.id}-${index}`}>
+                                                            <PhotoView src={message.messageBody} key={`${message.id}-${index}`}>
                                                                 <img loading="lazy" onError={(e) => { let url = e.target.src; e.target.src = ""; e.target.src = url }}
                                                                     style={{ maxWidth: isSmallScreen ? '100%' : '350px', maxHeight: isSmallScreen ? '100%' : '350px', borderRadius: '10px' }}
-                                                                    src={message.imageUrlOnIpfs}
+                                                                    src={message.messageBody}
                                                                 />
+                                                               
                                                             </PhotoView>
-
                                                             {/*loop through collection of images  */}
                                                             {/* {typeof (message.messageBody) == 'object' && Object.values(message.messageBody)
                                                                 .map((image, index) => {

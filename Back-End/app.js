@@ -374,7 +374,7 @@ app.post('/api/v1/STABLEDIFFUSION', async (req, res) => {
 
   } catch (error) {
     console.error(error)
-    res.status(500).send(error || 'Something went wrong in SAMSUM end point');
+    res.status(500).send(error || 'Something went wrong in STABLEDIFFUSION end point');
   }
 })
 
@@ -427,7 +427,7 @@ app.post('/api/v1/OPENJOURNEY', async (req, res) => {
 
   } catch (error) {
     console.error(error)
-    res.status(500).send(error || 'Something went wrong in SAMSUM end point');
+    res.status(500).send(error || 'Something went wrong in OPENJOURNEY end point');
   }
 })
 
@@ -480,7 +480,7 @@ app.post('/api/v1/ANYTHING', async (req, res) => {
 
   } catch (error) {
     console.error(error)
-    res.status(500).send(error || 'Something went wrong in SAMSUM end point');
+    res.status(500).send(error || 'Something went wrong in ANYTHING end point');
   }
 })
 
@@ -714,7 +714,7 @@ app.post('/api/v1/T2SEDEN', async (req, res) => {
 
   } catch (error) {
     console.error(error)
-    res.status(500).send(error || 'Something went wrong in SAMSUM end point');
+    res.status(500).send(error || 'Something went wrong in T2SEDEN end point');
   }
 
 })
@@ -890,8 +890,6 @@ app.post('/api/v1/DID_V2/VideoGeneratedWebhook/:chatID', async (req, res) => {
 
 // handleing DID api call
 app.post('/api/v1/DID_V2', async (req, res) => {
-
-  //   process.env.SELF_EXPOSED_URL
 
   const DIDConfig = req.body.DIDConfig;
 

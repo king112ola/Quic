@@ -8,3 +8,5 @@ Moralis-Server-Self-Host/.env
 /.vscode
 /Back-End/img
 /Moralis-Server-Self-Host/logs
+/Back-End/audio
+/Back-End/pdf

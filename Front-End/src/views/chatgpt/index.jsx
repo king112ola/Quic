@@ -453,7 +453,8 @@ const ChatGptIndex = () => {
                                                                             </PhotoView>)
                                                                     })} */}
 
-
+{/*                                                             
+                                                                // TODO: Allow auto scrollIntoView to be rendered properly
                                                                 <Typewriter
                                                                     words={['                                                                                                                            ']}
                                                                     loop={1}
@@ -461,7 +462,7 @@ const ChatGptIndex = () => {
                                                                     onType={() => {
                                                                         if (scrollRef.current && !isScrolling)
                                                                             scrollRef.current.scrollIntoView({ behavior: "auto" })
-                                                                    }} />
+                                                                    }} /> */}
 
                                                             </SubCard>
                                                         ,
