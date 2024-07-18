@@ -9,12 +9,9 @@ export default defineConfig({
     alias: {
       '~': path.resolve(__dirname, 'src'),
       '%': path.resolve(__dirname, './../Web3.0/'),
-
     },
   },
   optimizeDeps: {
     include: ['react/jsx-runtime'],
-  },
-  
-  
+  }
 })

@@ -32,6 +32,9 @@
   <!-- import axios -->
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
+  <!-- The following line avoid vite from generating "Global is not Definied" error-->
+  <script>window.global = window;</script>
+
   <!-- Client Side Rendering Script -->
   <script type="module" src="/src/csr.jsx"></script>
 
