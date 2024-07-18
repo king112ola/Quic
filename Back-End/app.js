@@ -24,7 +24,7 @@ const fetchWithRetry = require('node-fetch-retry');
 const { base64ToBlob, blobToBase64 } = require('base64-blob')
 
 // Defind Localhost Server 
-const localServerUrl = "http://localhost:5000"
+const quicServerUrl = process.env.QUIC_ONLINE_BACK_END_URL ?? "http://localhost:5000"
 
 const contentType = {
   Chatgpt: 'Text',
@@ -1047,7 +1047,7 @@ app.post('/api/v1/QuicAI', async (req, res) => {
     const selectedAIEngine = eval(Chatgpt_Function_Calling_Response_Message.function_call.name + `("${requested_content_type}")`)
 
     // self calling existing AI Api Endpoint from local Server 
-    const selectedAIEngineResponse = await fetch(localServerUrl + '/api/v1/' + selectedAIEngine, {
+    const selectedAIEngineResponse = await fetch(quicServerUrl +  '/api/v1/' + selectedAIEngine, {
       method: "POST",
       headers: {
         "ngrok-skip-browser-warning": "620",
@@ -1081,8 +1081,8 @@ app.post('/api/v1/QuicAI', async (req, res) => {
   res.end()
 })
 
-// handleing chatgpt api call
-app.post('/api/v1/Chatgpt', async (req, res) => {
+// TODO: Extract each api method and separte them into different services
+const triggerChatgptWorkflow = async (req, res) => {
 
   try {
     if (!req.body.prompt) {
@@ -1132,7 +1132,10 @@ app.post('/api/v1/Chatgpt', async (req, res) => {
     res.status(500).send(error || 'Something went wrong in Chatgpt end point.');
   }
 
-})
+}
+
+// handleing chatgpt api call
+app.post('/api/v1/Chatgpt', triggerChatgptWorkflow)
 
 // handle DALL·E 2 api call
 app.post('/api/v1/DALLE2', async (req, res) => {

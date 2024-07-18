@@ -206,8 +206,7 @@ const ChatGptIndex = () => {
                     messageRecordObject.messageBody = attributes.Message
                     break;
                 case 'DALLE2':
-                    messageRecordObject.messageBody = [{ imageUrlOnIpfs: attributes.Message }]
-                    messageRecordObject.imageUrlOnIpfs = attributes.Message
+                    messageRecordObject.messageBody = attributes.Message
                     break;
                 case 'DID':
                     messageRecordObject.messageBody = attributes.Message
@@ -224,20 +223,14 @@ const ChatGptIndex = () => {
                 case 'RIFFUSION':
                     messageRecordObject.messageBody = attributes.Message
                     break;
-
                 case 'STABLEDIFFUSION':
                     messageRecordObject.messageBody = attributes.Message
-                    messageRecordObject.imageUrlOnIpfs = attributes.Message
                     break;
-
                 case 'OPENJOURNEY':
                     messageRecordObject.messageBody = attributes.Message
-                    messageRecordObject.imageUrlOnIpfs = attributes.Message
                     break;
-
                 case 'ANYTHING':
                     messageRecordObject.messageBody = attributes.Message
-                    messageRecordObject.imageUrlOnIpfs = attributes.Message
                     break;
                 
 
@@ -309,8 +302,7 @@ const ChatGptIndex = () => {
                                 if (message !== undefined && message.Message_AiEngine == (filterAiEngineForRecord ?? message.Message_AiEngine))
                                     return (
                                         <Grid style={{ whiteSpace: "pre-line", justifyContent: message.contentType == 'pdf' ? "center" : "center" }} item xs={12} key={message.id} id={"messageID-" + message.id} sx={{ display: message.contentType == 'pdf' ? "flex" : 'flex', flexDirection: { xs: 'column', sm: 'row' } }}>
-
-
+                                           
                                             {
                                                 {
                                                     'text':
@@ -331,7 +323,6 @@ const ChatGptIndex = () => {
                                                                     style={{ maxWidth: isSmallScreen ? '100%' : '350px', maxHeight: isSmallScreen ? '100%' : '350px', borderRadius: '10px' }}
                                                                     src={message.messageBody}
                                                                 />
-                                                               
                                                             </PhotoView>
                                                             {/*loop through collection of images  */}
                                                             {/* {typeof (message.messageBody) == 'object' && Object.values(message.messageBody)
