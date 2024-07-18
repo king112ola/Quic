@@ -21,7 +21,7 @@ const utilities = {
     children: [
         {
             id: 'util-INTAI',
-            title: 'INT Ai Engines-1',
+            title: 'All in One',
             type: 'item',
             url: '/utils/util-INTAI',
             icon: icons.IconTypography,
@@ -50,30 +50,8 @@ const utilities = {
             url: '/utils/util-BlockchainPool',
             icon: icons.IconBuildingCarousel,
             breadcrumbs: false
-        },
-
-        {
-            id: 'AiList',
-            title: 'List of Ai Engines',
-            type: 'collapse',
-            icon: icons.IconWindmill,
-            children: [
-                {
-                    id: 'List-1',
-                    title: 'Valid Ai Api Call List-1',
-                    type: 'item',
-                    url: '/list/AiList1',
-                    breadcrumbs: false
-                },
-                {
-                    id: 'List-2',
-                    title: 'Valid Ai Api Call List-2',
-                    type: 'item',
-                    url: '/icons/AiList2',
-                    breadcrumbs: false
-                }
-            ]
         }
+
     ]
 };
 

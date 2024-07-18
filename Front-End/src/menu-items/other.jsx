@@ -1,21 +1,21 @@
 // assets
-import { IconBrandChrome, IconHelp } from '@tabler/icons-react';
+import { IconBrandChrome, IconHelp , IconMail } from '@tabler/icons-react';
 
 // constant
-const icons = { IconBrandChrome, IconHelp };
+const icons = { IconBrandChrome, IconHelp, IconMail };
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
 const other = {
-    id: 'sample-docs-roadmap',
-    type: 'group',
+    id: 'Quic.ai.team@gmail.com',
+    type: 'item',
     children: [
         {
-            id: 'ChatGpt-Page',
-            title: 'Chatgpt',
+            id: 'mail',
+            title: 'Quic.ai.team@gmail.com',
             type: 'item',
-            url: '/ChatGpt-Page',
-            icon: icons.IconBrandChrome,
+            url: 'Quic.ai.team@gmail.com',
+            icon: icons.IconMail,
             breadcrumbs: false
         },
       

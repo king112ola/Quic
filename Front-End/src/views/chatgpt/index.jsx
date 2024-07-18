@@ -318,8 +318,6 @@ const ChatGptIndex = () => {
 
         }
 
-        console.log("messageToSave:",messageToSave)
-
         dispatch(SET_AddMessage(messageToSave))
 
     }
