@@ -10,3 +10,4 @@ Moralis-Server-Self-Host/.env
 /Moralis-Server-Self-Host/logs
 /Back-End/pdf/*
 /Moralis-Server-Self-Host/build
+*.wav
