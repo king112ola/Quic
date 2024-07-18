@@ -37,6 +37,7 @@ const contentType = {
   STABLEDIFFUSION: 'Image',
   OPENJOURNEY: 'Image',
   ANYTHING: 'Image',
+  MUSICFY: 'Audio'
 
 }
 
@@ -108,6 +109,13 @@ const uploadToIpfs_Moralis = async (content, prompt, type) => {
         path: 'message-' + config.lastDID_Video_IDNumber + '.D-ID' + '.mp4',
         content: fs.readFileSync('./' + content, { encoding: "base64" })
       })
+
+    case 'MUSICFY':
+      uploadInfo.push({
+        path: 'message-' + config.lastMUSICFY_Audio_IDNumber + '.Musicfy' + '.wav',
+        content: fs.readFileSync('./' + content, { encoding: "base64" })
+      })
+      break;
 
     case 'T2SEDEN':
       uploadInfo.push({
@@ -188,12 +196,16 @@ const uploadToIpfs_Moralis = async (content, prompt, type) => {
       case pictureFormatConditions.some(format => element.path.includes(format)):
         return { imageUrlOnIpfs: element.path }
 
-      // did
+      // D-ID
       case element.path.includes(".D-ID.mp4"):
         return { videoOnIpfs: element.path }
 
       // Text to Speech Eden
       case element.path.includes(".Text2Speech-EDEN.wav"):
+        return { audioOnIpfs: element.path }
+
+      // Musicfy
+      case element.path.includes(".Musicfy.wav"):
         return { audioOnIpfs: element.path }
 
       // Doc pdf translate Eden
@@ -244,7 +256,7 @@ const downloadDALLE2Image = (url, dest, cb) => {
     });
 
   request.on('error', function (err) {
-    
+
   });
 
 };
@@ -266,14 +278,38 @@ const downloadDIDVideo = (url, dest, cb) => {
         file.close(cb(dest));
       });
     })
-    // .on('finish', () => cb(dest))
     .on('error', function (err) {
       fs.unlink(dest); // Delete the file async if there is an error
       if (cb) cb(err.message);
     });
 
   request.on('error', function (err) {
-    
+
+  });
+
+};
+
+// Download Audio from the Musicfy AI
+const downloadMUSICFYAudio = (url, dest, cb) => {
+
+  // update the dest image number
+  dest = dest + "-" + config.lastMUSICFY_Audio_IDNumber + '.wav'
+
+  let file = fs.createWriteStream(dest);
+  let request = https
+    .get(url, function (response) {
+      response.pipe(file);
+      file.on('finish', function () {
+        file.close(cb(dest));
+      });
+    })
+    .on('error', function (err) {
+      fs.unlink(dest); // Delete the file async if there is an error
+      if (cb) cb(err.message);
+    });
+
+  request.on('error', function (err) {
+
   });
 
 };
@@ -299,7 +335,7 @@ const downloadT2SEDENAudio = (url, dest, cb) => {
     });
 
   request.on('error', function (err) {
-    
+
   });
 
 };
@@ -329,13 +365,13 @@ app.post('/api/v1/STABLEDIFFUSION', async (req, res) => {
 
   config.lastSTABLEDIFFUSION_Image_IDNumber += 1
   fs.writeFileSync('config.json', JSON.stringify(config));
-  
-  try{
-    if(!req.body.prompt){
+
+  try {
+    if (!req.body.prompt) {
       console.log("Error missing argument");
-      res.status(500).send(error || 'Missing argument in prompt.');  
+      res.status(500).send(error || 'Missing argument in prompt.');
     }
-  }catch(error){
+  } catch (error) {
     console.error(error);
     res.status(500).send(error || 'Missing argument in prompt.');
   }
@@ -384,12 +420,12 @@ app.post('/api/v1/OPENJOURNEY', async (req, res) => {
   config.lastOPENJOURNEY_Image_IDNumber += 1
   fs.writeFileSync('config.json', JSON.stringify(config));
 
-  try{
-    if(!req.body.prompt){
+  try {
+    if (!req.body.prompt) {
       console.log("Error missing argument");
-      res.status(500).send(error || 'Missing argument in prompt.');  
+      res.status(500).send(error || 'Missing argument in prompt.');
     }
-  }catch(error){
+  } catch (error) {
     console.error(error);
     res.status(500).send(error || 'Missing argument in prompt.');
   }
@@ -437,12 +473,12 @@ app.post('/api/v1/ANYTHING', async (req, res) => {
   config.lastANYTHING_Image_IDNumber += 1
   fs.writeFileSync('config.json', JSON.stringify(config));
 
-  try{
-    if(!req.body.prompt){
+  try {
+    if (!req.body.prompt) {
       console.log("Error missing argument");
-      res.status(500).send(error || 'Missing argument in prompt.');  
+      res.status(500).send(error || 'Missing argument in prompt.');
     }
-  }catch(error){
+  } catch (error) {
     console.error(error);
     res.status(500).send(error || 'Missing argument in prompt.');
   }
@@ -484,20 +520,64 @@ app.post('/api/v1/ANYTHING', async (req, res) => {
   }
 })
 
+// handleing MUSICFY Ai api call
+app.post('/api/v1/MUSICFY', async (req, res) => {
 
-// handleing Eden Ai PDF Translation api call
+  // update last image number
+  config.lastMUSICFY_Audio_IDNumber += 1
+  fs.writeFileSync('config.json', JSON.stringify(config));
+
+  let prompt = req.body.prompt
+
+  try {
+    if (!prompt) {
+      console.log("Error missing argument");
+      res.status(500).send(error || 'Missing argument in prompt.');
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error || 'Missing argument in prompt.');
+  }
+
+  const response = await fetch("https://api.musicfy.lol/v1/generate-music", {
+    method: "POST",
+    headers: {
+      "ngrok-skip-browser-warning": "620",
+      "Content-Type": "application/json",
+      authorization: 'Bearer ' + process.env.MUSICFY_API_KEY,
+    },
+    body: `{"prompt":"${prompt}"}`
+  }).catch((error) => {
+    console.error("Error:", error);
+  });
+
+  let MUSICFYAudio_resource_url = (await response.json())[0]["file_url"]
+
+  downloadMUSICFYAudio(MUSICFYAudio_resource_url, 'audio/MUSICFY', function (dest) {
+
+    uploadToIpfs_Moralis(dest, prompt, 'MUSICFY').then((resultIpfsLinks) => {
+      res.status(200).send(resultIpfsLinks)
+    }
+    )
+
+  })
+})
+
+
+
+// handleing RIFFUSION Ai api call
 app.post('/api/v1/RIFFUSION', async (req, res) => {
 
   // update last image number
   config.lastRIFFUSION_AudioPlusImage_IDNumber += 1
   fs.writeFileSync('config.json', JSON.stringify(config));
 
-  try{
-    if(!req.body.prompt){
+  try {
+    if (!req.body.prompt) {
       console.log("Error missing argument");
-      res.status(500).send(error || 'Missing argument in prompt.');  
+      res.status(500).send(error || 'Missing argument in prompt.');
     }
-  }catch(error){
+  } catch (error) {
     console.error(error);
     res.status(500).send(error || 'Missing argument in prompt.');
   }
@@ -578,12 +658,12 @@ app.post('/api/v1/RIFFUSION', async (req, res) => {
 // handleing Eden Ai PDF Translation api call
 app.post('/api/v1/PDFTRANSEDEN', async (req, res) => {
 
-  try{
-    if(!req.body.uploadedPdf || !req.body.preferredLanguage){
+  try {
+    if (!req.body.uploadedPdf || !req.body.preferredLanguage) {
       console.log("Error missing argument");
-      res.status(500).send(error || 'Somethings went wrong in uploaded PDF or preferred Language.');  
+      res.status(500).send(error || 'Somethings went wrong in uploaded PDF or preferred Language.');
     }
-  }catch(error){
+  } catch (error) {
     console.error(error);
     res.status(500).send(error || 'Somethings went wrong in uploaded PDF or preferred Language.');
   }
@@ -653,17 +733,17 @@ app.post('/api/v1/T2SEDEN', async (req, res) => {
   // store and add the number if the chatgot message
   config.lastT2SEDEN_Audio_IDNumber += 1
   fs.writeFileSync('config.json', JSON.stringify(config));
-  
-  try{
-    if(!req.body.prompt){
+
+  try {
+    if (!req.body.prompt) {
       console.log("Error missing argument");
-      res.status(500).send(error || 'Missing argument in prompt.');  
+      res.status(500).send(error || 'Missing argument in prompt.');
     }
-  }catch(error){
+  } catch (error) {
     console.error(error);
     res.status(500).send(error || 'Missing argument in prompt.');
   }
-  
+
   const prompt = req.body.prompt;
 
   const createTextToSpeechFromEden = async (provider) => {
@@ -704,8 +784,8 @@ app.post('/api/v1/T2SEDEN', async (req, res) => {
     let T2SEDENAudio_resource_url = await createTextToSpeechFromEden('lovoai')
 
     downloadT2SEDENAudio(T2SEDENAudio_resource_url, 'audio/T2SEDEN', function (callbacks) {
-      uploadToIpfs_Moralis(callbacks, prompt, 'T2SEDEN').then((element) => {
-        res.status(200).send(element)
+      uploadToIpfs_Moralis(callbacks, prompt, 'T2SEDEN').then((resultIpfsLinks) => {
+        res.status(200).send(resultIpfsLinks)
 
       }
       )
@@ -727,12 +807,12 @@ app.post('/api/v1/SAMSUM', async (req, res) => {
   config.lastSAMSUM_Text_IDNumber += 1
   fs.writeFileSync('config.json', JSON.stringify(config));
 
-  try{
-    if(!req.body.prompt){
+  try {
+    if (!req.body.prompt) {
       console.log("Error missing argument");
-      res.status(500).send(error || 'Missing argument in prompt.');  
+      res.status(500).send(error || 'Missing argument in prompt.');
     }
-  }catch(error){
+  } catch (error) {
     console.error(error);
     res.status(500).send(error || 'Missing argument in prompt.');
   }
@@ -776,12 +856,12 @@ app.post('/api/v1/SAMSUM', async (req, res) => {
 // handleing DID api call
 app.post('/api/v1/DID', async (req, res) => {
 
-  try{
-    if(!req.body.prompt){
+  try {
+    if (!req.body.prompt) {
       console.log("Error missing argument");
-      res.status(500).send(error || 'Missing argument in prompt.');  
+      res.status(500).send(error || 'Missing argument in prompt.');
     }
-  }catch(error){
+  } catch (error) {
     console.error(error);
     res.status(500).send(error || 'Missing argument in prompt.');
   }
@@ -849,9 +929,9 @@ app.post('/api/v1/DID', async (req, res) => {
 
     downloadDIDVideo(videoUrl, 'video/DID', function (callbacks) {
 
-      uploadToIpfs_Moralis(callbacks, prompt, 'DID').then((element) => {
+      uploadToIpfs_Moralis(callbacks, prompt, 'DID').then((resultIpfsLinks) => {
 
-        res.status(200).send(element)
+        res.status(200).send(resultIpfsLinks)
 
       }
       )
@@ -869,20 +949,20 @@ app.post('/api/v1/DID', async (req, res) => {
 app.post('/api/v1/DID_V2/VideoGeneratedWebhook/:chatID', async (req, res) => {
 
   const chatID = req.params['chatID']
-  
+
   const result_url = req.body.result_url
 
   let chatEngineRes = await fetch(`https://api.chatengine.io/chats/${chatID}/messages/`,
-  {
-    method: "POST", // *GET, POST, PUT, DELETE, etc.
-    headers: {
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Project-ID": process.env.CHAT_PROJECT_ID,
-      "User-Name": process.env.DATONG_AI_CHAT_USER_NAME,
-      "User-Secret": process.env.DATONG_AI_CHAT_USER_SECRET,
-    },
-    body: JSON.stringify({ "text": "","attachment_urls": [result_url], }),
-  })
+    {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Project-ID": process.env.CHAT_PROJECT_ID,
+        "User-Name": process.env.DATONG_AI_CHAT_USER_NAME,
+        "User-Secret": process.env.DATONG_AI_CHAT_USER_SECRET,
+      },
+      body: JSON.stringify({ "text": "", "attachment_urls": [result_url], }),
+    })
 
   // let resJson = await chatEngineRes.json()
   res.status(200).end();
@@ -941,16 +1021,16 @@ app.post('/api/v1/QuicAI', async (req, res) => {
     }
   ]
 
-  try{
-    if(!req.body.prompt){
+  try {
+    if (!req.body.prompt) {
       console.log("Error missing argument");
-      res.status(500).send(error || 'Missing argument in prompt.');  
+      res.status(500).send(error || 'Missing argument in prompt.');
     }
-  }catch(error){
+  } catch (error) {
     console.error(error);
     res.status(500).send(error || 'Missing argument in prompt.');
   }
-  
+
   try {
     const prompt = req.body.prompt;
     response = await openai.createChatCompletion({
@@ -1003,13 +1083,13 @@ app.post('/api/v1/QuicAI', async (req, res) => {
 
 // handleing chatgpt api call
 app.post('/api/v1/Chatgpt', async (req, res) => {
-  
-  try{
-    if(!req.body.prompt){
+
+  try {
+    if (!req.body.prompt) {
       console.log("Error missing argument");
-      res.status(500).send(error || 'Missing argument in prompt.');  
+      res.status(500).send(error || 'Missing argument in prompt.');
     }
-  }catch(error){
+  } catch (error) {
     console.error(error);
     res.status(500).send(error || 'Missing argument in prompt.');
   }
@@ -1019,7 +1099,7 @@ app.post('/api/v1/Chatgpt', async (req, res) => {
   // store and add the number if the chatgot message
   config.lastChatgpt_Text_IDNumber += 1
   fs.writeFileSync('config.json', JSON.stringify(config));
- 
+
   try {
     const prompt = req.body.prompt;
     const response = await openai.createChatCompletion({
@@ -1056,13 +1136,13 @@ app.post('/api/v1/Chatgpt', async (req, res) => {
 
 // handle DALL·E 2 api call
 app.post('/api/v1/DALLE2', async (req, res) => {
- 
-  try{
-    if(!req.body.prompt){
+
+  try {
+    if (!req.body.prompt) {
       console.log("Error missing argument");
-      res.status(500).send(error || 'Missing argument in prompt.');  
+      res.status(500).send(error || 'Missing argument in prompt.');
     }
-  }catch(error){
+  } catch (error) {
     console.error(error);
     res.status(500).send(error || 'Missing argument in prompt.');
   }
@@ -1088,12 +1168,12 @@ app.post('/api/v1/DALLE2', async (req, res) => {
       let location = downloadDALLE2Image(eachUrl, 'img/DALLE2', function (callbacks) {
         // example callbacks = img/DALLE2-30.jpg
         // uploadToIpfs_Moralis(callbacks);
-        uploadToIpfs_Moralis(callbacks, prompt, 'DALLE2').then((element) => {
+        uploadToIpfs_Moralis(callbacks, prompt, 'DALLE2').then((resultIpfsLinks) => {
 
           // just a quic switch for better performance , will be removed
-          // element[0].imageUrlOnIpfs = url[0]
+          // resultIpfsLinks[0].imageUrlOnIpfs = url[0]
 
-          res.status(200).send(element)
+          res.status(200).send(resultIpfsLinks)
 
         }
         )
