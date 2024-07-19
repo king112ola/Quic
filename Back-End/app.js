@@ -221,13 +221,12 @@ const uploadToIpfs_Moralis = async (content, prompt, type) => {
     }
 
   })
-  let resultIpfsLinksOnCfIPFS = JSON.parse(JSON.stringify(resultIpfsLinks).replaceAll('ipfs.moralis.io:2053', 'cf-ipfs.com'))
-  let resultIpfsLinksCloudFlareIPFS = JSON.parse(JSON.stringify(resultIpfsLinks).replaceAll('ipfs.moralis.io:2053', 'cloudflare-ipfs.com'))
+  let resultIpfsLinksW3S = JSON.parse(JSON.stringify(resultIpfsLinks).replaceAll('ipfs.moralis.io:2053', 'w3s.link'))
   let resultIpfsLinksDwebLinkIPFS = JSON.parse(JSON.stringify(resultIpfsLinks).replaceAll('ipfs.moralis.io:2053', 'dweb.link'))
   let resultIpfsLinks4everland = JSON.parse(JSON.stringify(resultIpfsLinks).replaceAll('ipfs.moralis.io:2053', '4everland.io'))
   let resultIpfsLinksgatewaypinata = JSON.parse(JSON.stringify(resultIpfsLinks).replaceAll('ipfs.moralis.io:2053', 'gateway.pinata.cloud'))
 
-  return resultIpfsLinks
+  return resultIpfsLinksgatewaypinata
 }
 
 // download function for getting image form url
