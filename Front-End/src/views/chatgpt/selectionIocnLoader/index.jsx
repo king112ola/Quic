@@ -242,9 +242,9 @@ export const SelectionIconLoader = () => {
                             <motion.h5 style={{ width: '70px' }} className="selectionItem" onClick={() => handleChangeCurrentAiEngine('STABLEDIFFUSION')}>Stable-Diffusion</motion.h5>
                             <motion.h5 style={{ width: '70px' }} className="selectionItem" onClick={() => handleChangeCurrentAiEngine('T2SEDEN')}>T2S Eden</motion.h5>
                             <motion.h5
-                                hidden={!isPremiumUser}
+                                // TODO: make some of the ai as isPremiumUser only, but for demo, we do not hide any ai.
+                                // hidden={!isPremiumUser}
                                 style={{ width: isSmallScreen ? '90px' : '80px' }} className="selectionItem"
-
 
                                 onClick={() => {
                                     document.getElementById('DocUpload').click()
@@ -255,10 +255,10 @@ export const SelectionIconLoader = () => {
                             >
                                 PDF Translate Eden
                             </motion.h5>
-                            <motion.h5 hidden={!isPremiumUser} style={{ width: '50px' }} className="selectionItem" onClick={() => handleChangeCurrentAiEngine('DID')}>D-ID</motion.h5>
+                            <motion.h5 style={{ width: '50px' }} className="selectionItem" onClick={() => handleChangeCurrentAiEngine('DID')}>D-ID</motion.h5>
                             <motion.h5 style={{ width: '70px' }} className="selectionItem" onClick={() => handleChangeCurrentAiEngine('OPENJOURNEY')}>Openjourney</motion.h5>
                             <motion.h5 style={{ width: '70px' }} className="selectionItem" onClick={() => handleChangeCurrentAiEngine('ANYTHING')}>Anything-v4.0</motion.h5>
-                            <motion.h5 hidden={!isPremiumUser} style={{ width: '70px' }} className="selectionItem" onClick={() => handleChangeCurrentAiEngine('None')}>Bard</motion.h5>
+                            <motion.h5 style={{ width: '70px' }} className="selectionItem" onClick={() => handleChangeCurrentAiEngine('None')}>Bard</motion.h5>
                             <motion.h5 style={{ width: '70px' }} className="selectionItem" >Bing Ai.</motion.h5>
                             <motion.h5 style={{ width: '70px' }} className="selectionItem" ></motion.h5>
                             <motion.h5 style={{ width: '70px' }} className="selectionItem" ></motion.h5>

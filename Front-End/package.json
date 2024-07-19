@@ -7,7 +7,7 @@
     "dev": "vite",
     "build:client": "vite build --outDir dist/client",
     "build:server": "vite build --outDir dist/server --ssr src/entry-server.jsx",
-    "build": "vite build",
+    "build": "vite build && move _redirects dist\\",
     "preview": "vite preview",
     "comepileSass": "sass src/assets/scss/style.scss style.css"
   },
