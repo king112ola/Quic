@@ -7,7 +7,8 @@
     "dev": "vite",
     "build:client": "vite build --outDir dist/client",
     "build:server": "vite build --outDir dist/server --ssr src/entry-server.jsx",
-    "build": "vite build && move _redirects dist\\",
+    "build": "vite build && copy _redirects dist",
+    "build+deploy": "vite build && copy _redirects dist && npx netlify-cli deploy --site quic.hk --prod --dir dist",
     "preview": "vite preview",
     "comepileSass": "sass src/assets/scss/style.scss style.css"
   },
