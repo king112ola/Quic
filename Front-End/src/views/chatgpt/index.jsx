@@ -1,10 +1,13 @@
-import { Container, Grid, Link, Card } from '@mui/material';
+import {Grid} from '@mui/material';
 import MuiTypography from '@mui/material/Typography';
 
 // project imports
 import SubCard from '~/ui-component/cards/SubCard';
 import MainCard from '~/ui-component/cards/MainCard';
-import SecondaryAction from '~/ui-component/cards/CardSecondaryAction';
+import LinearProgress from '@mui/material/LinearProgress';
+
+import Slide from '@mui/material/Slide';
+import Fade from '@mui/material/Fade';
 
 // project imports
 import AnimateButton from '~/ui-component/extended/AnimateButton';
@@ -13,7 +16,7 @@ import AnimateButton from '~/ui-component/extended/AnimateButton';
 import InputSection from './inputField';
 
 // Customized Style
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system';
 
 // Scrollbar 
@@ -30,11 +33,10 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 // Import usehooks
 import { useRef, useEffect, useState, useMemo, memo } from "react";
 import React from 'react';
-import { unmountComponentAtNode, render } from "react-dom";
 
 // Import Redux 
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { SET_AddMessage, SET_TranslationLanguage, SET_TranslationMenuOpen } from '~/redux/slices/message-related/messageSlice'
+import { SET_AddMessage } from '~/redux/slices/message-related/messageSlice'
 
 // import animation
 import { SelectionIconLoader } from './selectionIocnLoader';
@@ -61,7 +63,6 @@ import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 
 // import pdf reader and pdf plugin
-import { Viewer } from '@react-pdf-viewer/core'; // install this library
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout'; // install this library
 import PdfViewer from './pdfViewer';
 
@@ -93,6 +94,10 @@ const ChatGptIndex = () => {
 
     // a ref for audio player
     const audioRef = useRef(null);
+
+    // For loading animation while waiting for AI Response 
+    const [loadingStage, setLoadingStage] = useState('idle'); // 'idle', 'loading', 'fading'
+    const loadingContainerRef = useRef(null);
 
     // Load message/ Init message from Redux store
     const messages = useSelector((state) => state.messagesFromUserAndServer.messages, shallowEqual)
@@ -185,6 +190,8 @@ const ChatGptIndex = () => {
     // desireAiEngine only be used when data-chaining happens, if input is from input filed, desireAiEngine will he undefined
     const handleMessageInput = async (inputFromUser, desireAiEngine, hiddenFromUser, inputType, extraConfigPdfTransLanguage) => {
 
+        setLoadingStage('loading');
+
         // saving the user sending message into redux, change to the desire ai engine when data chaining happens
 
         let responseData
@@ -199,10 +206,18 @@ const ChatGptIndex = () => {
             currentAiEngine: desireAiEngine ?? currentAiEngine,
             hiddenFromUser: hiddenFromUser ?? false
         }))
-        
+
         try {
 
             responseData = await aiEngineApiCall(inputFromUser, desireAiEngine ?? currentAiEngine, inputType == 'pdf' ? extraConfigPdfTransLanguage : null)
+
+             // Set loading to false when the request is complete
+            setTimeout(() => {
+                setLoadingStage('fading');
+                setTimeout(() => {
+                    setLoadingStage('idle');
+                }, 500); // Duration of the fade out
+            }, 300); // Duration of the slide out
 
             let dynamicSelectedAiEngine
 
@@ -306,7 +321,7 @@ const ChatGptIndex = () => {
 
         } catch (error) {
 
-            console.error("Error occurs while handleMessageInput:",error)
+            console.error("Error occurs while handleMessageInput:", error)
             // messageToSave = {
             //     id: lastMessageId + 2,
             //     sender: desireAiEngine ?? currentAiEngine,
@@ -316,6 +331,9 @@ const ChatGptIndex = () => {
             //     messageBody: responseData,
             // }
 
+        } finally {
+           
+         
         }
 
         dispatch(SET_AddMessage(messageToSave))
@@ -437,7 +455,7 @@ const ChatGptIndex = () => {
                                                                             </PhotoView>)
                                                                     })} */}
 
-{/*                                                             
+                                                                {/*                                                             
                                                                 // TODO: Allow auto scrollIntoView to be rendered properly
                                                                 <Typewriter
                                                                     words={['                                                                                                                            ']}
@@ -521,16 +539,43 @@ const ChatGptIndex = () => {
 
                     </SimpleBar>
 
+                    {/* Loading spinner */}
+                    <Grid
+                        container
+                        alignItems="center"
+                        justifyContent="center"
+                    >
+                        <Grid item xs={3} ref={loadingContainerRef}>
+                            <Slide in={loadingStage === 'loading' || loadingStage === 'fading'} direction="left" container={loadingContainerRef.current} timeout={{ enter: 500, exit: 200 }} >
+                                <Fade in={loadingStage === 'loading'} timeout={{ enter: 200, exit: 500 }}>
+                                    <LinearProgress />
+                                </Fade>
+                            </Slide>
+                        </Grid>
+                    </Grid>
+           
 
-                </MainCard>
-                {/* The button to change Ai engine */}
-                {/* <CardForAiSelection > */}
-                {/* <MuiTypography variant="h5" gutterBottom>
+            </MainCard>
+            {/* The button to change Ai engine */}
+            {/* <CardForAiSelection > */}
+            {/* <MuiTypography variant="h5" gutterBottom>
                     Change Ai.
                 </MuiTypography> */}
 
-                <div>
-                    {isSmallScreen ?
+            <div>
+                {isSmallScreen ?
+                    <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '2rem', justifyContent: 'center' }}>
+
+                        <CardForAiSelection style={{ height: isSmallScreen ? '75px' : '70px', maxWidth: isSmallScreen ? '100%' : '31%' }} className='selectionContainer' contentSX={{ p: 0.9 }}>
+                            <SelectionIconLoader />
+                        </CardForAiSelection>
+
+                        {translationMenuOpen && <CardForAiSelection className="languageSelectionContainer" contentSX={{ p: 0 }} style={{ marginTop: isSmallScreen ? "1.6rem" : "1.9rem", padding: 0, height: '100%', }} >
+                            <LanguagesSelection handleMessageInput={handleMessageInput} />
+                        </CardForAiSelection>}
+                    </div>
+                    :
+                    <AnimateButton>
                         <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '2rem', justifyContent: 'center' }}>
 
                             <CardForAiSelection style={{ height: isSmallScreen ? '75px' : '70px', maxWidth: isSmallScreen ? '100%' : '31%' }} className='selectionContainer' contentSX={{ p: 0.9 }}>
@@ -541,25 +586,13 @@ const ChatGptIndex = () => {
                                 <LanguagesSelection handleMessageInput={handleMessageInput} />
                             </CardForAiSelection>}
                         </div>
-                        :
-                        <AnimateButton>
-                            <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '2rem', justifyContent: 'center' }}>
+                    </AnimateButton>
+                }
 
-                                <CardForAiSelection style={{ height: isSmallScreen ? '75px' : '70px', maxWidth: isSmallScreen ? '100%' : '31%' }} className='selectionContainer' contentSX={{ p: 0.9 }}>
-                                    <SelectionIconLoader />
-                                </CardForAiSelection>
-
-                                {translationMenuOpen && <CardForAiSelection className="languageSelectionContainer" contentSX={{ p: 0 }} style={{ marginTop: isSmallScreen ? "1.6rem" : "1.9rem", padding: 0, height: '100%', }} >
-                                    <LanguagesSelection handleMessageInput={handleMessageInput} />
-                                </CardForAiSelection>}
-                            </div>
-                        </AnimateButton>
-                    }
-
-                </div>
-                {/* </CardForAiSelection> */}
-                <InputSection handleMessageInput={handleMessageInput} />
-            </PhotoProvider>
+            </div>
+            {/* </CardForAiSelection> */}
+            <InputSection handleMessageInput={handleMessageInput} />
+        </PhotoProvider >
             <ApiCallAndUploadToParseServer />
         </>
     )
