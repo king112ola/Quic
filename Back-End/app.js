@@ -368,7 +368,7 @@ const logConversation = (sessionId, role, content) => {
 // Middleware to generate/manage session ID and update last activity time
 app.use((req, res, next) => {
   let sessionId = req.header('X-Session-ID');
-  console.log(sessionId)
+
   if (!sessionId) {
     sessionId = crypto.randomBytes(16).toString('hex');
     res.setHeader('X-Session-ID', sessionId);
@@ -1113,7 +1113,6 @@ const triggerChatgptWorkflow = async (req, res) => {
     return res.status(400).send('Missing argument in prompt.');
   }
   const sessionId = req.sessionId;
-  console.log(`Session ID: ${sessionId}`);
 
   const session = sessions.get(sessionId);
   if (!session) {
