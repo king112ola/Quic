@@ -1,4 +1,4 @@
-import {Grid} from '@mui/material';
+import { Grid } from '@mui/material';
 import MuiTypography from '@mui/material/Typography';
 
 // project imports
@@ -332,8 +332,7 @@ const ChatGptIndex = () => {
             // }
 
         } finally {
-           
-         
+
         }
 
         dispatch(SET_AddMessage(messageToSave))
@@ -350,18 +349,6 @@ const ChatGptIndex = () => {
 
     // Check the screen size
     const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down('sm'));
-
-    const icon = {
-        hidden: {
-            opacity: 0,
-            pathLength: 0,
-            fill: "rgba(255, 255, 255, 0)"
-        },
-        visible: {
-            opacity: 1,
-            pathLength: 1
-        }
-    };
 
     return (
         <>
@@ -545,7 +532,7 @@ const ChatGptIndex = () => {
                         alignItems="center"
                         justifyContent="center"
                     >
-                        <Grid item xs={3} ref={loadingContainerRef}>
+                        <Grid item xs={3} ref={loadingContainerRef} >
                             <Slide in={loadingStage === 'loading' || loadingStage === 'fading'} direction="left" container={loadingContainerRef.current} timeout={{ enter: 500, exit: 200 }} >
                                 <Fade in={loadingStage === 'loading'} timeout={{ enter: 200, exit: 500 }}>
                                     <LinearProgress />
@@ -553,29 +540,17 @@ const ChatGptIndex = () => {
                             </Slide>
                         </Grid>
                     </Grid>
-           
 
-            </MainCard>
-            {/* The button to change Ai engine */}
-            {/* <CardForAiSelection > */}
-            {/* <MuiTypography variant="h5" gutterBottom>
+
+                </MainCard>
+                {/* The button to change Ai engine */}
+                {/* <CardForAiSelection > */}
+                {/* <MuiTypography variant="h5" gutterBottom>
                     Change Ai.
                 </MuiTypography> */}
 
-            <div>
-                {isSmallScreen ?
-                    <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '2rem', justifyContent: 'center' }}>
-
-                        <CardForAiSelection style={{ height: isSmallScreen ? '75px' : '70px', maxWidth: isSmallScreen ? '100%' : '31%' }} className='selectionContainer' contentSX={{ p: 0.9 }}>
-                            <SelectionIconLoader />
-                        </CardForAiSelection>
-
-                        {translationMenuOpen && <CardForAiSelection className="languageSelectionContainer" contentSX={{ p: 0 }} style={{ marginTop: isSmallScreen ? "1.6rem" : "1.9rem", padding: 0, height: '100%', }} >
-                            <LanguagesSelection handleMessageInput={handleMessageInput} />
-                        </CardForAiSelection>}
-                    </div>
-                    :
-                    <AnimateButton>
+                <div>
+                    {isSmallScreen ?
                         <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '2rem', justifyContent: 'center' }}>
 
                             <CardForAiSelection style={{ height: isSmallScreen ? '75px' : '70px', maxWidth: isSmallScreen ? '100%' : '31%' }} className='selectionContainer' contentSX={{ p: 0.9 }}>
@@ -586,13 +561,25 @@ const ChatGptIndex = () => {
                                 <LanguagesSelection handleMessageInput={handleMessageInput} />
                             </CardForAiSelection>}
                         </div>
-                    </AnimateButton>
-                }
+                        :
+                        <AnimateButton>
+                            <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '2rem', justifyContent: 'center' }}>
 
-            </div>
-            {/* </CardForAiSelection> */}
-            <InputSection handleMessageInput={handleMessageInput} />
-        </PhotoProvider >
+                                <CardForAiSelection style={{ height: isSmallScreen ? '75px' : '70px', maxWidth: isSmallScreen ? '100%' : '31%' }} className='selectionContainer' contentSX={{ p: 0.9 }}>
+                                    <SelectionIconLoader />
+                                </CardForAiSelection>
+
+                                {translationMenuOpen && <CardForAiSelection className="languageSelectionContainer" contentSX={{ p: 0 }} style={{ marginTop: isSmallScreen ? "1.6rem" : "1.9rem", padding: 0, height: '100%', }} >
+                                    <LanguagesSelection handleMessageInput={handleMessageInput} />
+                                </CardForAiSelection>}
+                            </div>
+                        </AnimateButton>
+                    }
+
+                </div>
+                {/* </CardForAiSelection> */}
+                <InputSection handleMessageInput={handleMessageInput} />
+            </PhotoProvider >
             <ApiCallAndUploadToParseServer />
         </>
     )
