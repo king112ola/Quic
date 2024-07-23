@@ -1057,7 +1057,7 @@ app.post('/api/v1/QuicAI', async (req, res) => {
     const prompt = req.body.prompt;
     const sessionId = req.sessionId;
     response = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo-0125",
+      model: "gpt-4o-mini",
 
       messages: [{ "role": "user", "content": prompt }],
 
@@ -1130,7 +1130,7 @@ const triggerChatgptWorkflow = async (req, res) => {
   try {
     const prompt = req.body.prompt;
     const response = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o-mini",
       messages: conversationHistory,
       max_tokens: 1000,
     })
