@@ -497,6 +497,7 @@ const ChatGptIndex = () => {
                                                 item xs={12}
                                                 id={"messageID-" + message.id}
                                                 sx={{
+                                                    whiteSpace: "pre-line",
                                                     ...cursorStyle,
                                                     display: message.hiddenFromUser ? 'none' : 'flex',
                                                     justifyContent: justifyContent,
