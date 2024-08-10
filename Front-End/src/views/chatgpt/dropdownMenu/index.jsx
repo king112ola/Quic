@@ -20,9 +20,6 @@ export const DropdownMenu = ({ id, itemid, handleMessageInput, scrollRef }) => {
     // Load message/ Init message from Redux store
     const messages = useSelector((state) => state.messagesFromUserAndServer.messages, shallowEqual)
 
-    // Find the last Id from the message list
-    const lastMessageId = useSelector((state) => state.messagesFromUserAndServer.lastMessageId, shallowEqual)
-
     // close all of the dropdown menu and with the closing fade out + slide down effect
     const clearDropdownMenu = (handleMessageInput) => {
 
@@ -61,10 +58,7 @@ export const DropdownMenu = ({ id, itemid, handleMessageInput, scrollRef }) => {
                 break;
         }
 
-        // Inject a user side message to notify the user that the message is being redirected
-        handleMessageInput("Sending to " +aiEngineNameOutputToScreen[desireAiEngine] +"...", desireAiEngine,null, null, null, true)
-
-        clearDropdownMenu(() => handleMessageInput(inputFromUser, desireAiEngine, hiddenFromUser))
+        clearDropdownMenu(() => handleMessageInput(inputFromUser,desireAiEngine,null, null, null, true))
 
     }
     

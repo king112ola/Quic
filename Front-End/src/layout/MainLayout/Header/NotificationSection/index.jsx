@@ -123,27 +123,6 @@ const NotificationSection = () => {
                     break;
             }
 
-        // if (messages[lastMessageId - 1].contentType == "image")
-        //    { 
-
-        // messages[lastMessageId - 1].messageBody.forEach(element => {
-
-        //     switch (Object.keys(element)[0]) {
-        //         case 'imageUrlOnIpfs':
-        //             setIpfsHash(element.imageUrlOnIpfs)
-        //             break;
-        //         case 'promptOnIpfs':
-        //             // element.prompt should be the one stored on the ipfs, but i think we should use the redux record for simplicity 
-        //             setPromptForIpfsHash(messages[lastMessageId - 1].prompt)
-        //         default:
-        //             break;
-        //     }
-        //     //.split('ipfs/')[1]
-        // })}
-        // setIpfsHash
-        // if (messages[lastMessageId - 1].contentType == "image")
-        //     
-
     }, [messages])
     // 
 

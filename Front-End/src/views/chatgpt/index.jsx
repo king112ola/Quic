@@ -256,32 +256,44 @@ const ChatGptIndex = () => {
 
     // Create method that handles the input and dispatch to the reducer
     // desireAiEngine only be used when data-chaining happens, if input is from input filed, desireAiEngine will he undefined
-    const handleMessageInput = async (inputFromUser, desireAiEngine, hiddenFromUser, inputType, extraConfigPdfTransLanguage, internalMessage) => {
+    const handleMessageInput = async (inputFromUser, desireAiEngine, hiddenFromUser, inputType, extraConfigPdfTransLanguage, messageChaining) => {
 
         setLoadingStage('loading');
 
         // saving the user sending message into redux, change to the desire ai engine when data chaining happens
 
-        let responseData
+
+        // Stop sending request to AI Engines if its a internal message 
+        if (messageChaining) {
+            dispatch(SET_AddMessage({
+                id: lastMessageId + 1,
+                messageBody: "Sending to " + aiEngineNameOutputToScreen[desireAiEngine] + "...",
+                sender: 'User',
+                contentType: inputType ?? 'text',
+                prompt: inputFromUser,
+                currentAiEngine: desireAiEngine ?? currentAiEngine,
+                hiddenFromUser: hiddenFromUser ?? false,
+                messageChaining: messageChaining ?? false
+            }))
+
+        }
+        else {
+            dispatch(SET_AddMessage({
+                id: lastMessageId + 1,
+                messageBody: inputFromUser,
+                sender: 'User',
+                contentType: inputType ?? 'text',
+                currentAiEngine: desireAiEngine ?? currentAiEngine,
+                hiddenFromUser: hiddenFromUser ?? false,
+                messageChaining: messageChaining ?? false
+            }))
+        }
 
         let messageToSave
 
-        dispatch(SET_AddMessage({
-            id: Number(customAlphabet('1234567890', 64)()),
-            messageBody: inputFromUser,
-            sender: 'User',
-            contentType: inputType ?? 'text',
-            currentAiEngine: desireAiEngine ?? currentAiEngine,
-            hiddenFromUser: hiddenFromUser ?? false,
-            internalMessage: internalMessage?? false
-        }))
-
-        // Stop sending request to AI Engines if its a internal message 
-        if(internalMessage) return
-
         try {
 
-            responseData = await aiEngineApiCall(inputFromUser, desireAiEngine ?? currentAiEngine, inputType == 'pdf' ? extraConfigPdfTransLanguage : null)
+            let responseData = await aiEngineApiCall(inputFromUser, desireAiEngine ?? currentAiEngine, inputType == 'pdf' ? extraConfigPdfTransLanguage : null)
 
             // Set loading to false when the request is complete
             setTimeout(() => {
@@ -294,7 +306,6 @@ const ChatGptIndex = () => {
             let dynamicSelectedAiEngine
 
             messageToSave = {
-                // TODO: make this id to be nano id as well, but got content type error, need fix
                 id: lastMessageId + 2,
                 sender: desireAiEngine ?? currentAiEngine,
                 prompt: inputFromUser,
@@ -395,14 +406,6 @@ const ChatGptIndex = () => {
         } catch (error) {
 
             console.error("Error occurs while handleMessageInput:", error)
-            // messageToSave = {
-            //     id: lastMessageId + 2,
-            //     sender: desireAiEngine ?? currentAiEngine,
-            //     contentType: "text",
-            //     prompt: inputFromUser,
-            //     currentAiEngine: desireAiEngine ?? currentAiEngine,
-            //     messageBody: responseData,
-            // }
 
         } finally {
 
