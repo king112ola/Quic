@@ -262,7 +262,6 @@ const ChatGptIndex = () => {
 
         // saving the user sending message into redux, change to the desire ai engine when data chaining happens
 
-
         // Stop sending request to AI Engines if its a internal message 
         if (messageChaining) {
             dispatch(SET_AddMessage({
@@ -479,7 +478,6 @@ const ChatGptIndex = () => {
                                 let cursorStyle = isLongPressed ? pointerCursorStyle : defaultCursorStyle;
 
                                 // blocking the message box if the user is redirecting the message from one Ai to another
-
                                 if (message !== undefined)
 
                                     return (
@@ -547,17 +545,6 @@ const ChatGptIndex = () => {
                                                                                 />
                                                                             </PhotoView>)
                                                                     })} */}
-
-                                                                {/*                                                             
-                                                                // TODO: Allow auto scrollIntoView to be rendered properly
-                                                                <Typewriter
-                                                                    words={['                                                                                                                            ']}
-                                                                    loop={1}
-                                                                    typeSpeed={50}
-                                                                    onType={() => {
-                                                                        if (scrollRef.current && !isScrolling)
-                                                                            scrollRef.current.scrollIntoView({ behavior: "auto" })
-                                                                    }} /> */}
 
                                                             </SubCard>
                                                         ,
@@ -647,14 +634,9 @@ const ChatGptIndex = () => {
                         </Grid>
                     </Grid>
 
-
                 </MainCard>
-                {/* The button to change Ai engine */}
-                {/* <CardForAiSelection > */}
-                {/* <MuiTypography variant="h5" gutterBottom>
-                    Change Ai.
-                </MuiTypography> */}
 
+                {/* The button to change Ai engine */}
                 <div>
                     {isSmallScreen ?
                         <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '2rem', justifyContent: 'center' }}>
