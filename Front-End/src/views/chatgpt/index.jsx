@@ -260,6 +260,8 @@ const ChatGptIndex = () => {
 
         setLoadingStage('loading');
 
+        let destAiEngine = desireAiEngine ?? currentAiEngine
+
         // saving the user sending message into redux, change to the desire ai engine when data chaining happens
 
         // Stop sending request to AI Engines if its a internal message 
@@ -270,7 +272,7 @@ const ChatGptIndex = () => {
                 sender: 'User',
                 contentType: inputType ?? 'text',
                 prompt: inputFromUser,
-                currentAiEngine: desireAiEngine ?? currentAiEngine,
+                currentAiEngine: destAiEngine,
                 hiddenFromUser: hiddenFromUser ?? false,
                 messageChaining: messageChaining ?? false
             }))
@@ -282,7 +284,7 @@ const ChatGptIndex = () => {
                 messageBody: inputFromUser,
                 sender: 'User',
                 contentType: inputType ?? 'text',
-                currentAiEngine: desireAiEngine ?? currentAiEngine,
+                currentAiEngine: destAiEngine,
                 hiddenFromUser: hiddenFromUser ?? false,
                 messageChaining: messageChaining ?? false
             }))
@@ -292,7 +294,7 @@ const ChatGptIndex = () => {
 
         try {
 
-            let responseData = await aiEngineApiCall(inputFromUser, desireAiEngine ?? currentAiEngine, inputType == 'pdf' ? extraConfigPdfTransLanguage : null)
+            let responseData = await aiEngineApiCall(inputFromUser, destAiEngine, inputType == 'pdf' ? extraConfigPdfTransLanguage : null)
 
             // Set loading to false when the request is complete
             setTimeout(() => {
@@ -306,9 +308,9 @@ const ChatGptIndex = () => {
 
             messageToSave = {
                 id: lastMessageId + 2,
-                sender: desireAiEngine ?? currentAiEngine,
+                sender: destAiEngine,
                 prompt: inputFromUser,
-                currentAiEngine: desireAiEngine ?? currentAiEngine,
+                currentAiEngine: destAiEngine,
             }
 
             // according to whether the AI Engines is providing Dynamic Content and provide dispatch actions on top
@@ -318,10 +320,10 @@ const ChatGptIndex = () => {
                 messageToSave.dynamicSelectedAiEngine = dynamicSelectedAiEngine
             }
             else {
-                messageToSave.contentType = contentType[desireAiEngine ?? currentAiEngine]
+                messageToSave.contentType = contentType[destAiEngine]
             }
 
-            switch (dynamicSelectedAiEngine ?? (desireAiEngine ?? currentAiEngine)) {
+            switch (dynamicSelectedAiEngine ?? (destAiEngine)) {
                 case 'Chatgpt':
                     // index 2 is the message body in text, 0 and 1 is the location of where the ipfs file stored
                     messageToSave.messageBody = responseData.filter((e) => e.messageBodyInText)[0].messageBodyInText ?? responseData
@@ -404,7 +406,16 @@ const ChatGptIndex = () => {
 
         } catch (error) {
 
-            console.log("Error occurs while handleMessageInput:", error)
+            console.log(`Error occurs while receiving response from ${destAiEngine}`, error)
+
+            messageToSave = {
+                id: lastMessageId + 2,
+                sender: destAiEngine,
+                contentType: "text",
+                prompt: inputFromUser,
+                currentAiEngine: destAiEngine,
+                messageBody: `Error occurs while receiving response from ${destAiEngine}`,
+            }
 
         } finally {
 

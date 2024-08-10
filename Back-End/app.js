@@ -1032,7 +1032,7 @@ app.post('/api/v1/QuicAI', async (req, res) => {
   AI_API_Functions_Filtering = [
     {
       name: "classify_requested_content_type",
-      description: "get the the requested content type from an user input",
+      description: "This function dynamically determines the type of content a user is requesting based on their input. It analyzes the user's submitted text to discern whether the content required falls into specific categories such as text, image, music, video, or speech. The core objective is to accurately interpret the user's intent and return the corresponding content type category. This process ensures that responses or actions taken by the system are aligned with the user's actual needs, enhancing user interaction and satisfaction.",
       parameters: {
         type: "object",
         properties: {
