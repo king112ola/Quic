@@ -169,7 +169,7 @@ const ChatGptIndex = () => {
 
     }
 
-    // fucntion to handle message record after fectched from the moralis parese database
+    // function to handle message record after fectched from the moralis parese database
     const handleMessageRecordFromParseServer = async (records) => {
 
         let messageRecordsTobeShown = []
