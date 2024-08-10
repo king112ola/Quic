@@ -92,8 +92,6 @@
   transition: transform 200ms linear;
 }
 
-
-
 .dropdown:checked+label .uil {
   transform: rotate(180deg);
   font-size: 24px;
@@ -126,6 +124,13 @@
 }
 
 .dropdown:checked~.section-dropdown {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* Show the dropdown menu everytime when its opened */
+.dropdown:not(:checked)~.section-dropdown {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
@@ -466,12 +471,6 @@
 /* .MuiGrid-item::backdrop{
   background: red;
   opacity: 1;
-  animation: fade-in 500ms forwards;
-
-} */
-
-/* 
-.dropdown-menu-grid-item[style="display: flex;"]::backdrop {
   animation: fade-in 500ms forwards;
 
 } */

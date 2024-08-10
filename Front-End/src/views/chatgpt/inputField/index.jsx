@@ -76,7 +76,10 @@ const InputSection = ({ handleMessageInput }) => {
 
     return (
         <>
-            <Box >
+            <Box sx={{
+                    width: { md: '60%' }, // This limits the width to 50% on medium screens and up
+                    marginX: { md: 'auto' } // 
+            }}>
 
                 <OutlineInputStyle
                     onKeyDown={(e) => {

@@ -1,5 +1,20 @@
 import { useSelector, shallowEqual } from 'react-redux';
 
+const aiEngineNameOutputToScreen = {
+    Chatgpt: 'ChatGPT',
+    DALLE2: 'DALLE-2',
+    DID: 'D-ID',
+    SAMSUM: 'Samsum',
+    T2SEDEN: 'Eden T2S',
+    PDFTRANSEDEN: 'Eden Doc. Trans.',
+    RIFFUSION: 'Riffusion',
+    STABLEDIFFUSION: 'Stable-Diffusion',
+    OPENJOURNEY: 'Openjourney',
+    ANYTHING: 'Anything',
+    QuicAI: 'Quic',
+    MUSICFY: 'Musicfy'
+}
+
 export const DropdownMenu = ({ id, itemid, handleMessageInput, scrollRef }) => {
 
     // Load message/ Init message from Redux store
@@ -46,13 +61,13 @@ export const DropdownMenu = ({ id, itemid, handleMessageInput, scrollRef }) => {
                 break;
         }
 
+        // Inject a user side message to notify the user that the message is being redirected
+        handleMessageInput("Sending to " +aiEngineNameOutputToScreen[desireAiEngine] +"...", desireAiEngine,null, null, null, true)
+
         clearDropdownMenu(() => handleMessageInput(inputFromUser, desireAiEngine, hiddenFromUser))
 
     }
     
-    // 
-
-
     return (
         <div className="dropdown-menu" id={id}>
             <div className="sec-center ">
