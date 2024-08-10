@@ -92,6 +92,9 @@ const CardForAiSelection = styled(SubCard, { shouldForwardProp })(({ theme }) =>
 
 const ChatGptIndex = () => {
 
+    // Check the screen size
+    const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+
     // Create a scrolling ref for auto scroll to bottom
     const scrollRef = useRef(null);
 
@@ -126,7 +129,7 @@ const ChatGptIndex = () => {
     const [isScrolling, setIsScrolling] = useState(false)
 
     // Decide whether to show the dropdown or not
-    const dropdownLongPressThreshold = 500; // Time in milliseconds for long press detection
+    const dropdownLongPressThreshold = isSmallScreen? 1650 : 500; // Time in milliseconds for long press detection
     const [dropdownTimer, setDropdownTimer] = useState(null);
     const [isLongPressed, setIsLongPressed] = useState(false);
     const dropdownMousePositionRef = useRef({ x: 0, y: 0 });
@@ -432,9 +435,6 @@ const ChatGptIndex = () => {
             scrollRef.current.scrollIntoView();
         }
     }, [messages]);
-
-    // Check the screen size
-    const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
     return (
         <>
