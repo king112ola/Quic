@@ -404,7 +404,7 @@ const ChatGptIndex = () => {
 
         } catch (error) {
 
-            console.error("Error occurs while handleMessageInput:", error)
+            console.log("Error occurs while handleMessageInput:", error)
 
         } finally {
 
