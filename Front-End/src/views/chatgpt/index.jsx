@@ -152,10 +152,19 @@ const ChatGptIndex = () => {
         setDropdownTimer(newTimer);
     };
 
+    const handleTouchStart = (e, message) => {
+        const touch = e.touches[0];
+        handleDropdownMouseDown({ clientX: touch.clientX, clientY: touch.clientY }, message);
+    };
+
     const handleDropdownMouseUp = () => {
         // Clear the long press timer
         clearTimeout(dropdownTimer);
         setIsLongPressed(false); // Revert cursor to default
+    };
+
+    const handleTouchEnd = () => {
+        handleDropdownMouseUp();
     };
 
     const handleDropdownMouseMove = (e) => {
@@ -169,6 +178,11 @@ const ChatGptIndex = () => {
             clearTimeout(dropdownTimer);
             setIsLongPressed(false); // Revert cursor to default if moved
         }
+    };
+
+    const handleTouchMove = (e) => {
+        const touch = e.touches[0];
+        handleDropdownMouseMove({ clientX: touch.clientX, clientY: touch.clientY });
     };
 
 
@@ -477,8 +491,11 @@ const ChatGptIndex = () => {
 
                                                 }}
                                                 onMouseDown={(e) => handleDropdownMouseDown(e, message)}
+                                                onTouchStart={(e) => handleTouchStart(e, message)}
                                                 onMouseUp={handleDropdownMouseUp}
+                                                onTouchEnd={handleTouchEnd}
                                                 onMouseMove={handleDropdownMouseMove}
+                                                onTouchMove={handleTouchMove}
                                             >
 
                                                 {
