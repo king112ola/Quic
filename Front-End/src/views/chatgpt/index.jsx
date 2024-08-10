@@ -66,6 +66,9 @@ import 'react-h5-audio-player/lib/styles.css';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout'; // install this library
 import PdfViewer from './pdfViewer';
 
+// Generate a random ID for messages
+import { customAlphabet } from 'nanoid';
+
 // Create the own card format for Chatgpt
 const CardForAiSelection = styled(SubCard, { shouldForwardProp })(({ theme }) => ({
     // position: 'relative',
@@ -122,8 +125,64 @@ const ChatGptIndex = () => {
     // Create a state for the scrolling true not false
     const [isScrolling, setIsScrolling] = useState(false)
 
+    // Decide whether to show the dropdown or not
+    const dropdownLongPressThreshold = 500; // Time in milliseconds for long press detection
+    const [dropdownTimer, setDropdownTimer] = useState(null);
+    const [isLongPressed, setIsLongPressed] = useState(false);
+    const dropdownMousePositionRef = useRef({ x: 0, y: 0 });
+
+    // CSS for changing cursor to pointer
+    const pointerCursorStyle = { cursor: 'pointer' };
+    const defaultCursorStyle = { cursor: 'default' };
+
+    const handleDropdownMouseDown = (e, message) => {
+        if (message.contentType === 'pdf') return;
+
+        // Store the initial mouse position
+        dropdownMousePositionRef.current = { x: e.clientX, y: e.clientY };
+
+        clearDropdownMenu(message.id)
+
+        // Set up the timer for long press
+        const newTimer = setTimeout(() => {
+            showDropdownMenu(message.id);
+            setIsLongPressed(true);  // Change cursor to pointer
+        }, dropdownLongPressThreshold);
+
+        setDropdownTimer(newTimer);
+    };
+
+    const handleDropdownMouseUp = () => {
+        // Clear the long press timer
+        clearTimeout(dropdownTimer);
+        setIsLongPressed(false); // Revert cursor to default
+    };
+
+    const handleDropdownMouseMove = (e) => {
+        const distance = Math.sqrt(
+            Math.pow(e.clientX - dropdownMousePositionRef.current.x, 2) +
+            Math.pow(e.clientY - dropdownMousePositionRef.current.y, 2)
+        );
+
+        // Cancel the dropdown if the mouse has moved significantly
+        if (distance > 10) { // Adjust the sensitivity as needed
+            clearTimeout(dropdownTimer);
+            setIsLongPressed(false); // Revert cursor to default if moved
+        }
+    };
+
+
     // function for displaying/hidding the dropdown menu
     const showDropdownMenu = (id) => {
+
+        let dropdownMenu = document.getElementById('dropdown-menu-' + id)
+        if (dropdownMenu.style.display === "none" || dropdownMenu.style.display === "")
+            dropdownMenu.style.display = "flex"
+
+    }
+
+    const clearDropdownMenu = (id) => {
+
         let dropdownMenu = document.getElementById('dropdown-menu-' + id)
 
         // css effect to fade-in + slide-up when user click the message box
@@ -138,16 +197,11 @@ const ChatGptIndex = () => {
             }, { once: true }
             )
 
+            // close the rest of the dropdown menu
+            for (let i = 1; i <= lastMessageId; i++)
+                if (i !== id && document.getElementById('dropdown-menu-' + i) !== null)
+                    document.getElementById('dropdown-menu-' + i).style.display = "none"
         }
-        else
-            dropdownMenu.style.display = "flex"
-
-        // close the rest of the dropdown menu
-        for (let i = 1; i <= lastMessageId; i++)
-            if (i !== id && document.getElementById('dropdown-menu-' + i) !== null)
-                document.getElementById('dropdown-menu-' + i).style.display = "none"
-
-
     }
 
     // Defind contemt type
@@ -167,7 +221,7 @@ const ChatGptIndex = () => {
 
     // Defind Ai Engine Name When Output to the user
     const aiEngineNameOutputToScreen = {
-        Chatgpt: 'Chatgpt',
+        Chatgpt: 'ChatGPT',
         DALLE2: 'DALLE-2',
         DID: 'D-ID',
         SAMSUM: 'Samsum',
@@ -188,7 +242,7 @@ const ChatGptIndex = () => {
 
     // Create method that handles the input and dispatch to the reducer
     // desireAiEngine only be used when data-chaining happens, if input is from input filed, desireAiEngine will he undefined
-    const handleMessageInput = async (inputFromUser, desireAiEngine, hiddenFromUser, inputType, extraConfigPdfTransLanguage) => {
+    const handleMessageInput = async (inputFromUser, desireAiEngine, hiddenFromUser, inputType, extraConfigPdfTransLanguage, internalMessage) => {
 
         setLoadingStage('loading');
 
@@ -199,19 +253,23 @@ const ChatGptIndex = () => {
         let messageToSave
 
         dispatch(SET_AddMessage({
-            id: lastMessageId + 1,
+            id: Number(customAlphabet('1234567890', 64)()),
             messageBody: inputFromUser,
             sender: 'User',
             contentType: inputType ?? 'text',
             currentAiEngine: desireAiEngine ?? currentAiEngine,
-            hiddenFromUser: hiddenFromUser ?? false
+            hiddenFromUser: hiddenFromUser ?? false,
+            internalMessage: internalMessage?? false
         }))
+
+        // Stop sending request to AI Engines if its a internal message 
+        if(internalMessage) return
 
         try {
 
             responseData = await aiEngineApiCall(inputFromUser, desireAiEngine ?? currentAiEngine, inputType == 'pdf' ? extraConfigPdfTransLanguage : null)
 
-             // Set loading to false when the request is complete
+            // Set loading to false when the request is complete
             setTimeout(() => {
                 setLoadingStage('fading');
                 setTimeout(() => {
@@ -222,6 +280,7 @@ const ChatGptIndex = () => {
             let dynamicSelectedAiEngine
 
             messageToSave = {
+                // TODO: make this id to be nano id as well, but got content type error, need fix
                 id: lastMessageId + 2,
                 sender: desireAiEngine ?? currentAiEngine,
                 prompt: inputFromUser,
@@ -353,9 +412,14 @@ const ChatGptIndex = () => {
     return (
         <>
             <PhotoProvider>
-                <MainCard sx={{ padding: 0, border: "1px solid rgba(255, 0, 0, .5)", height: { xs: '64%', sm: '78%' }, }}
+                <MainCard sx={{
+                    padding: 0,
+                    border: "1px solid rgba(255, 0, 0, .5)",
+                    height: { xs: '64%', sm: '78%' },
+                    maxWidth: { md: '60%' }, // This limits the width to 50% on medium screens and up
+                    marginX: { md: 'auto' } // This centers the card horizontally on medium screens and up
+                }}
                     title={
-
                         <Typewriter2
                             showCursor={false}
                             options={{
@@ -379,12 +443,23 @@ const ChatGptIndex = () => {
 
                     <SimpleBar onWheel={(e) => setIsScrolling(e.deltaY == -100 ? true : false)}
                         style={{ padding: "0.7%", maxHeight: isSmallScreen ? '36vh' : '55vh' }}>
-                        <Grid container spacing={{ xs: 2, md: 2 }}>
+                        <Grid container spacing={{ xs: 2, md: 2 }}
+
+                            sx={{
+
+                            }}
+                        >
                             {messages !== undefined && messages.map((message, index) => {
 
-                                // set the cursor to false when rendered 
 
                                 let sender = message.sender == 'User' ? 'You' : aiEngineNameOutputToScreen[message.currentAiEngine]
+
+                                // Align messages left or right based on the sender
+                                let justifyContent = message.sender === 'User' ? 'flex-end' : 'flex-start';
+
+                                // Define cursor style and message display type based on content type and other conditions
+                                let displayStyle = message.hiddenFromUser ? 'none' : (message.contentType === 'pdf' ? 'flex' : 'block');
+                                let cursorStyle = isLongPressed ? pointerCursorStyle : defaultCursorStyle;
 
                                 // blocking the message box if the user is redirecting the message from one Ai to another
 
@@ -392,29 +467,40 @@ const ChatGptIndex = () => {
 
                                     return (
                                         <React.Fragment key={message.id} >
-                                            <Grid style={{ whiteSpace: "pre-line", cursor: 'pointer', justifyContent: message.contentType == 'pdf' ? "center" : "flex-start" }} item xs={12} onClick={() => { if (message.contentType !== 'pdf') showDropdownMenu(message.id) }} id={"messageID-" + message.id} sx={{ display: message.hiddenFromUser == true ? 'none' : (message.contentType == 'pdf' ? "flex" : 'block') }}>
+                                            <Grid
+                                                item xs={12}
+                                                id={"messageID-" + message.id}
+                                                sx={{
+                                                    ...cursorStyle,
+                                                    display: message.hiddenFromUser ? 'none' : 'flex',
+                                                    justifyContent: justifyContent,
+
+                                                }}
+                                                onMouseDown={(e) => handleDropdownMouseDown(e, message)}
+                                                onMouseUp={handleDropdownMouseUp}
+                                                onMouseMove={handleDropdownMouseMove}
+                                            >
+
                                                 {
                                                     {
                                                         'text':
-                                                            <SubCard >
-                                                                <MuiTypography variant={isSmallScreen ? 'h5' : 'h4'} gutterBottom  >
-                                                                    <Typewriter
-                                                                        cursorStyle='|'
-                                                                        cursor={false}
-                                                                        words={[sender + ": " + message.messageBody]}
-                                                                        loop={1}
-                                                                        typeSpeed={23}
-                                                                        onType={() => {
-                                                                            if (scrollRef.current && !isScrolling)
-                                                                                scrollRef.current.scrollIntoView({ behavior: "auto" })
-                                                                        }}
-                                                                    />
-
+                                                            <SubCard style={{ maxWidth: '80%' }}>
+                                                                <MuiTypography variant={isSmallScreen ? 'h5' : 'h4'} >
+                                                                    <span style={{ cursor: 'text' }}>  {/* Apply cursor style to the span wrapping the text */}
+                                                                        <Typewriter
+                                                                            cursorStyle='|'
+                                                                            cursor={false}
+                                                                            words={[`${(message.sender == "User") ? "" : sender + ":"} ${message.messageBody}`]}
+                                                                            loop={1}
+                                                                            typeSpeed={23}
+                                                                            onType={() => {
+                                                                                if (scrollRef.current && !isScrolling)
+                                                                                    scrollRef.current.scrollIntoView({ behavior: "auto" })
+                                                                            }}
+                                                                        />
+                                                                    </span>
                                                                 </MuiTypography>
-
-
-
-                                                            </SubCard >
+                                                            </SubCard>
                                                         ,
 
                                                         'image':
@@ -471,7 +557,7 @@ const ChatGptIndex = () => {
                                                             </SubCard>
                                                         ,
                                                         'audio':
-                                                            <SubCard sx={{ p: 0, }}  >
+                                                            <SubCard sx={{ p: 0, width: "32.4%" }}  >
                                                                 <MuiTypography variant={isSmallScreen ? 'h5' : 'h4'} gutterBottom  >
                                                                     {sender}:
                                                                 </MuiTypography>
@@ -504,11 +590,11 @@ const ChatGptIndex = () => {
 
                                             </Grid>
                                             <Grid item xs={12}
-                                                className='dropdown-menu-grid-item'
                                                 sx={{ display: message.hiddenFromUser == true ? 'none' : 'block' }}
                                             >
                                                 {message.contentType !== 'pdf' && <DropdownMenu itemid={message.id} id={'dropdown-menu-' + message.id} handleMessageInput={handleMessageInput} scrollRef={scrollRef} />}
                                             </Grid>
+
                                         </React.Fragment>
                                     )
 
