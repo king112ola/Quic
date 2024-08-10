@@ -26,7 +26,8 @@ export default function componentStyleOverrides(theme) {
             styleOverrides: {
                 root: {
                     color: theme.colors?.textDark,
-                    padding: '24px'
+                    padding: '18px',
+                    paddingBottom: '10px'
                 },
                 title: {
                     fontSize: '1.125rem'
@@ -36,7 +37,9 @@ export default function componentStyleOverrides(theme) {
         MuiCardContent: {
             styleOverrides: {
                 root: {
-                    padding: '24px'
+                    padding: '24px',
+                    paddingTop: '0px',
+                    paddingBottom: '0px'
                 }
             }
         },

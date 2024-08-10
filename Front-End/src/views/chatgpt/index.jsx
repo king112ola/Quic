@@ -129,7 +129,7 @@ const ChatGptIndex = () => {
     const [isScrolling, setIsScrolling] = useState(false)
 
     // Decide whether to show the dropdown or not
-    const dropdownLongPressThreshold = isSmallScreen? 1650 : 500; // Time in milliseconds for long press detection
+    const dropdownLongPressThreshold = isSmallScreen ? 1650 : 500; // Time in milliseconds for long press detection
     const [dropdownTimer, setDropdownTimer] = useState(null);
     const [isLongPressed, setIsLongPressed] = useState(false);
     const dropdownMousePositionRef = useRef({ x: 0, y: 0 });
@@ -443,9 +443,24 @@ const ChatGptIndex = () => {
                     padding: 0,
                     border: "1px solid rgba(255, 0, 0, .5)",
                     height: { xs: '64%', sm: '78%' },
-                    maxWidth: { md: '60%' }, // This limits the width to 50% on medium screens and up
-                    marginX: { md: 'auto' } // This centers the card horizontally on medium screens and up
+                    maxWidth: { md: '60%' },
+                    marginX: { md: 'auto' },
+                    paddingTop: { sm: '0px', md: '24px' },
+                    paddingLeft: { sm: '0px', md: '24px' },
+                    paddingRight: { sm: '0px', md: '24px' },
+                    paddingBottom: { sm: '0px', md: '0px' },
                 }}
+                    onWheel={(e) => setIsScrolling(e.deltaY == -100 ? true : false)}
+                    onTouchStart={(e) => {
+                        const touchStartY = e.touches[0].clientY;
+                        e.target.setAttribute('data-touch-start-y', touchStartY);
+                    }}
+                    onTouchMove={(e) => {
+                        const touchStartY = Number(e.target.getAttribute('data-touch-start-y'));
+                        const currentTouchY = e.touches[0].clientY;
+                        const deltaY = currentTouchY - touchStartY;
+                        setIsScrolling(deltaY > 0);
+                    }}
                     title={
                         <Typewriter2
                             showCursor={false}
@@ -456,28 +471,29 @@ const ChatGptIndex = () => {
                             }}
                             onInit={
                                 (typewriter) => {
-                                    typewriter.typeString('...').pauseFor(2300).deleteAll().typeString('Try out Chatgpt!')
+                                    typewriter.typeString('...').pauseFor(2300).deleteAll().typeString('Try out Quic!')
                                         .pauseFor(100)
-                                        .deleteChars(8)
+                                        .deleteChars(5)
                                         .pauseFor(2500)
-                                        .typeString('Chatgpt!')
+                                        .typeString('Quic!')
                                         .pauseFor(3300)
                                         .start()
                                 }}
                         />
                     }>
 
-
-                    <SimpleBar onWheel={(e) => setIsScrolling(e.deltaY == -100 ? true : false)}
-                        style={{ padding: "0.7%", maxHeight: isSmallScreen ? '36vh' : '55vh' }}>
+                    {/* Replace this Grid with simplebar if needed */}
+                    <Grid
+                        style={{
+                            maxHeight: isSmallScreen ? '45vh' : '60vh',
+                            overflow: 'auto',
+                            scrollbarWidth: 'none',
+                        }}>
                         <Grid container spacing={{ xs: 2, md: 2 }}
 
-                            sx={{
-
-                            }}
+                         
                         >
                             {messages !== undefined && messages.map((message, index) => {
-
 
                                 let sender = message.sender == 'User' ? 'You' : aiEngineNameOutputToScreen[message.currentAiEngine]
 
@@ -514,20 +530,26 @@ const ChatGptIndex = () => {
                                                 {
                                                     {
                                                         'text':
-                                                            <SubCard style={{ maxWidth: '80%' }}>
+                                                            <SubCard style={{ maxWidth: '80%' ,}}
+                                                            sx={{
+                                                                // borderColor: `${ message.sender === "User" ?'#673ab7':"#1D1D1D" }`,
+                                                            }}
+                                                            >
                                                                 <MuiTypography variant={isSmallScreen ? 'h5' : 'h4'} >
                                                                     <span style={{ cursor: 'text' }}>  {/* Apply cursor style to the span wrapping the text */}
-                                                                        <Typewriter
+                                                                        {message.sender === "User" ? (
+                                                                            message.messageBody
+                                                                        ) : (<Typewriter
                                                                             cursorStyle='|'
                                                                             cursor={false}
-                                                                            words={[`${(message.sender == "User") ? "" : sender + ":"} ${message.messageBody}`]}
+                                                                            words={[`${sender + ":"} ${message.messageBody}`]}
                                                                             loop={1}
                                                                             typeSpeed={23}
                                                                             onType={() => {
                                                                                 if (scrollRef.current && !isScrolling)
                                                                                     scrollRef.current.scrollIntoView({ behavior: "auto" })
                                                                             }}
-                                                                        />
+                                                                        />)}
                                                                     </span>
                                                                 </MuiTypography>
                                                             </SubCard>
@@ -629,7 +651,7 @@ const ChatGptIndex = () => {
                         {/* Reference to the end of the scrolling */}
                         <div ref={scrollRef} />
 
-                    </SimpleBar>
+                    </Grid>
 
                     {/* Loading spinner */}
                     <Grid
