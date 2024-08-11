@@ -445,10 +445,10 @@ const ChatGptIndex = () => {
                     height: { xs: '64%', sm: '78%' },
                     maxWidth: { md: '60%' },
                     marginX: { md: 'auto' },
-                    paddingTop: { sm: '0px', md: '24px' },
-                    paddingLeft: { sm: '0px', md: '24px' },
-                    paddingRight: { sm: '0px', md: '24px' },
-                    paddingBottom: { sm: '0px', md: '0px' },
+                    paddingTop: { xs: '18px', sm: '24px' },
+                    paddingLeft: { xs: '24px', sm: '24px' },
+                    paddingRight: { xs: '24px', sm: '24px' },
+                    paddingBottom: { xs: '0px', sm: '0px' },
                 }}
                     onWheel={(e) => setIsScrolling(e.deltaY == -100 ? true : false)}
                     onTouchStart={(e) => {
@@ -491,7 +491,7 @@ const ChatGptIndex = () => {
                         }}>
                         <Grid container spacing={{ xs: 2, md: 2 }}
 
-                         
+
                         >
                             {messages !== undefined && messages.map((message, index) => {
 
@@ -518,6 +518,7 @@ const ChatGptIndex = () => {
                                                     display: message.hiddenFromUser ? 'none' : 'flex',
                                                     justifyContent: justifyContent,
 
+
                                                 }}
                                                 onMouseDown={(e) => handleDropdownMouseDown(e, message)}
                                                 onTouchStart={(e) => handleTouchStart(e, message)}
@@ -530,10 +531,12 @@ const ChatGptIndex = () => {
                                                 {
                                                     {
                                                         'text':
-                                                            <SubCard style={{ maxWidth: '80%' ,}}
-                                                            sx={{
-                                                                // borderColor: `${ message.sender === "User" ?'#673ab7':"#1D1D1D" }`,
-                                                            }}
+                                                            <SubCard
+                                                                sx={{
+                                                                    maxWidth: '80%',
+                                                                    padding: '15px',
+                                                                    // borderColor: `${ message.sender === "User" ?'#673ab7':"#1D1D1D" }`,
+                                                                }}
                                                             >
                                                                 <MuiTypography variant={isSmallScreen ? 'h5' : 'h4'} >
                                                                     <span style={{ cursor: 'text' }}>  {/* Apply cursor style to the span wrapping the text */}

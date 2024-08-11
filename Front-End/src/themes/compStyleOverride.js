@@ -26,8 +26,9 @@ export default function componentStyleOverrides(theme) {
             styleOverrides: {
                 root: {
                     color: theme.colors?.textDark,
-                    padding: '18px',
-                    paddingBottom: '10px'
+                    padding: '0px',
+                    paddingBottom: '10px',
+                    paddingLeft: '0px',
                 },
                 title: {
                     fontSize: '1.125rem'
@@ -39,7 +40,9 @@ export default function componentStyleOverrides(theme) {
                 root: {
                     padding: '24px',
                     paddingTop: '0px',
-                    paddingBottom: '0px'
+                    paddingBottom: '0px',
+                    // '&:last-child': { paddingBottom: '20px' },
+                    '&:last-child': { padding: '0px' }
                 }
             }
         },
