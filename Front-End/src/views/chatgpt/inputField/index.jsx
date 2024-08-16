@@ -5,7 +5,7 @@ import { useTheme, styled } from '@mui/material/styles';
 import { Avatar, Box, ButtonBase, Card, Container, Grid, InputAdornment, OutlinedInput, Popper, TextField } from '@mui/material';
 
 // assets
-import { IconSend, IconArrowRightCircle, IconX, IconMicrophone } from '@tabler/icons-react';
+import { IconSend, IconArrowRightCircle, IconX, IconMicrophone, IconPlayerStopFilled } from '@tabler/icons-react';
 import { shouldForwardProp } from '@mui/system';
 
 // Animation from framer
@@ -77,13 +77,13 @@ const InputSection = ({ handleMessageInput }) => {
     return (
         <>
             <Box sx={{
-                    width: { md: '60%' }, // This limits the width to 50% on medium screens and up
-                    marginX: { md: 'auto' } // 
+                width: { md: '60%' }, // This limits the width to 50% on medium screens and up
+                marginX: { md: 'auto' } // 
             }}>
 
                 <OutlineInputStyle
                     onKeyDown={(e) => {
-                        if (e.keyCode == 13) {
+                        if (e.keyCode == 13 && handleMessageInput !== undefined) {
                             setValue("");
                             handleMessageInput(value);
                         }
@@ -115,19 +115,19 @@ const InputSection = ({ handleMessageInput }) => {
                         <>
                             <React.Suspense fallback={<Loading />}>
                                 <VoiceToSpeechComponent setValue={setValue} handle />
-                                </React.Suspense>
-                                <InputAdornment position="end" onClick={() => {
-                                                setValue("");
-                                                handleMessageInput(value);
-                                            }}>
-                                    <ButtonBase sx={{ borderRadius: '12px' }}>
-                                        <SendButtonAvatarStyle variant="rounded">
-                                            <IconSend  stroke={1.5} size="1.3rem" />
-                                        </SendButtonAvatarStyle>
-                                    </ButtonBase>
+                            </React.Suspense>
+                            <InputAdornment position="end" onClick={() => {
+                                setValue("");
+                                handleMessageInput(value);
+                            }}>
+                                <ButtonBase sx={{ borderRadius: '12px' }}>
+                                    <SendButtonAvatarStyle variant="rounded">
+                                        {handleMessageInput ? <IconSend stroke={1.5} size="1.3rem" /> : <IconPlayerStopFilled stroke={1.5} size="1.3rem" />}
+                                    </SendButtonAvatarStyle>
+                                </ButtonBase>
 
-                                </InputAdornment>
-                       
+                            </InputAdornment>
+
                         </>
                     }
 

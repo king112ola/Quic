@@ -105,6 +105,9 @@ const ChatGptIndex = () => {
     const [loadingStage, setLoadingStage] = useState('idle'); // 'idle', 'loading', 'fading'
     const loadingContainerRef = useRef(null);
 
+    //  State to track if input handling is active
+    const [inputHandlingActive, setInputHandlingActive] = useState(false);
+
     // Load message/ Init message from Redux store
     const messages = useSelector((state) => state.messagesFromUserAndServer.messages, shallowEqual)
 
@@ -261,6 +264,8 @@ const ChatGptIndex = () => {
     // desireAiEngine only be used when data-chaining happens, if input is from input filed, desireAiEngine will he undefined
     const handleMessageInput = async (inputFromUser, desireAiEngine, hiddenFromUser, inputType, extraConfigPdfTransLanguage, messageChaining) => {
 
+        // Set active before processing
+        setInputHandlingActive(true);
         setLoadingStage('loading');
 
         let destAiEngine = desireAiEngine ?? currentAiEngine
@@ -421,7 +426,8 @@ const ChatGptIndex = () => {
             }
 
         } finally {
-
+            // Reset input handling to false after processing
+            setInputHandlingActive(false);
         }
 
         dispatch(SET_AddMessage(messageToSave))
@@ -703,7 +709,7 @@ const ChatGptIndex = () => {
 
                 </div>
                 {/* </CardForAiSelection> */}
-                <InputSection handleMessageInput={handleMessageInput} />
+                <InputSection handleMessageInput={!inputHandlingActive ? handleMessageInput : undefined} />
             </PhotoProvider >
             <ApiCallAndUploadToParseServer />
         </>
