@@ -264,6 +264,9 @@ const ChatGptIndex = () => {
     // desireAiEngine only be used when data-chaining happens, if input is from input filed, desireAiEngine will he undefined
     const handleMessageInput = async (inputFromUser, desireAiEngine, hiddenFromUser, inputType, extraConfigPdfTransLanguage, messageChaining) => {
 
+        // Stop invalid user input
+        if(!inputFromUser) return
+
         // Set active before processing
         setInputHandlingActive(true);
         setLoadingStage('loading');
