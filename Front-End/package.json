@@ -7,8 +7,8 @@
     "dev": "vite",
     "build:client": "vite build --outDir dist/client",
     "build:server": "vite build --outDir dist/server --ssr src/entry-server.jsx",
-    "build": "vite build && copy _redirects dist",
-    "build+deploy": "vite build && copy _redirects dist && npx netlify-cli deploy --site quic.hk --prod --dir dist",
+    "build": "vite build && copyfiles _redirects dist",
+    "build+deploy": "vite build && copyfiles _redirects dist && npx netlify-cli deploy --site quic.hk --prod --dir dist",
     "preview": "vite preview",
     "comepileSass": "sass src/assets/scss/style.scss style.css"
   },
@@ -31,6 +31,7 @@
     "material-ui-popup-state": "^5.0.4",
     "moralis": "^2.14.2",
     "nanoid": "^5.0.7",
+    "netlify-cli": "^17.34.1",
     "node-sass": "^8.0.0",
     "nodemon": "^2.0.20",
     "pdfjs-dist": "3.3.122",
@@ -63,6 +64,7 @@
     "@types/react": "^18.0.26",
     "@types/react-dom": "^18.0.9",
     "@vitejs/plugin-react": "^3.0.0",
+    "copyfiles": "^2.4.1",
     "vite": "^4.0.0"
   }
 }
