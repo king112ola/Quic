@@ -1,4 +1,4 @@
-name: Front End - Buid and Deploy to (Netlify)
+name: Front End - Build and Deploy to Netlify
 
 on:
   push:
@@ -8,8 +8,8 @@ on:
       - 'Front-End/**'
 
 defaults:
- run:
-  working-directory: ./Front-End
+  run:
+    working-directory: ./Front-End
 
 jobs:
   build-and-deploy:
@@ -22,7 +22,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
-          
+          cache: 'npm'  # Enable caching for npm
+
       - name: Create env file
         run: |
           touch .env
