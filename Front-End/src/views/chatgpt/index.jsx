@@ -26,6 +26,9 @@ import 'simplebar-react/dist/simplebar.min.css';
 // Import typing effect 
 import Typewriter2 from 'typewriter-effect';
 import { Typewriter } from 'react-simple-typewriter'
+import RenderTypewriterText from '~/render-component/TextRender'
+
+
 
 // Import mediaQuery to check if in mobile 
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -130,6 +133,8 @@ const ChatGptIndex = () => {
 
     // Create a state for the scrolling true not false
     const [isScrolling, setIsScrolling] = useState(false)
+
+    const [completedAiTyping, setCompletedAiTyping] = useState(new Set());
 
     // Decide whether to show the dropdown or not
     const dropdownLongPressThreshold = isSmallScreen ? 1650 : 500; // Time in milliseconds for long press detection
@@ -265,7 +270,7 @@ const ChatGptIndex = () => {
     const handleMessageInput = async (inputFromUser, desireAiEngine, hiddenFromUser, inputType, extraConfigPdfTransLanguage, messageChaining) => {
 
         // Stop invalid user input
-        if(!inputFromUser) return
+        if (!inputFromUser) return
 
         // Set active before processing
         setInputHandlingActive(true);
@@ -459,16 +464,20 @@ const ChatGptIndex = () => {
                     paddingRight: { xs: '24px', sm: '24px' },
                     paddingBottom: { xs: '0px', sm: '0px' },
                 }}
-                    onWheel={(e) => setIsScrolling(e.deltaY == -100 ? true : false)}
+                    onWheel={(e) => {
+                        if (e.deltaY < 0)
+                            setIsScrolling(true)
+                    }}
                     onTouchStart={(e) => {
                         const touchStartY = e.touches[0].clientY;
-                        e.target.setAttribute('data-touch-start-y', touchStartY);
+                        e.target.setAttribute('screen-touch-start-y', touchStartY);
                     }}
                     onTouchMove={(e) => {
-                        const touchStartY = Number(e.target.getAttribute('data-touch-start-y'));
+                        const touchStartY = Number(e.target.getAttribute('screen-touch-start-y'));
                         const currentTouchY = e.touches[0].clientY;
                         const deltaY = currentTouchY - touchStartY;
-                        setIsScrolling(deltaY > 0);
+                        if (deltaY > 0)
+                            setIsScrolling(true);
                     }}
                     title={
                         <Typewriter2
@@ -526,8 +535,6 @@ const ChatGptIndex = () => {
                                                     ...cursorStyle,
                                                     display: message.hiddenFromUser ? 'none' : 'flex',
                                                     justifyContent: justifyContent,
-
-
                                                 }}
                                                 onMouseDown={(e) => handleDropdownMouseDown(e, message)}
                                                 onTouchStart={(e) => handleTouchStart(e, message)}
@@ -551,16 +558,23 @@ const ChatGptIndex = () => {
                                                                     <span style={{ cursor: 'text' }}>  {/* Apply cursor style to the span wrapping the text */}
                                                                         {message.sender === "User" ? (
                                                                             message.messageBody
-                                                                        ) : (<Typewriter
-                                                                            cursorStyle='|'
-                                                                            cursor={false}
-                                                                            words={[`${sender + ":"} ${message.messageBody}`]}
-                                                                            loop={1}
-                                                                            typeSpeed={23}
+                                                                        ) : (<RenderTypewriterText
+                                                                            message={message.messageBody}
+                                                                            sender={sender}
+                                                                            scrollRef={scrollRef}
+                                                                            isScrolling={isScrolling}
                                                                             onType={() => {
                                                                                 if (scrollRef.current && !isScrolling)
                                                                                     scrollRef.current.scrollIntoView({ behavior: "auto" })
                                                                             }}
+                                                                            onLoopDone={() => {
+                                                                                if (!completedAiTyping.has(message.id)) {
+                                                                                    setIsScrolling(false)
+                                                                                    setCompletedAiTyping(new Set(completedAiTyping).add(message.id));
+                                                                                }
+                                                                            }
+                                                                            }
+
                                                                         />)}
                                                                     </span>
                                                                 </MuiTypography>
