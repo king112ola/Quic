@@ -1,0 +1,49 @@
+name: Front End - Buid and Deploy to (Netlify)
+
+on:
+  push:
+    branches: 
+      - 'main'
+    paths: 
+      - 'Front-End/**'
+
+defaults:
+ run:
+  working-directory: ./Front-End
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          
+      - name: Create env file
+        run: |
+          touch .env
+          echo "${{ secrets.FRONT_END_ENV }}" > .env
+
+      - name: Install Netlify
+        run: npm install netlify-cli --location=global
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy to Netlify
+        id: netlify_deploy
+        run: |
+          cp _redirects dist
+          netlify deploy \
+            --dir dist \
+            --site ${{ secrets.NETLIFY_SITE_ID }} \
+            --auth ${{ secrets.NETLIFY_API_TOKEN }} \
+            --prod
