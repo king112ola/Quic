@@ -1,6 +1,5 @@
 Back-End/.env
 Front-End/.env
-Front-End/package-lock.json
 /Front-End/dist
 Moralis-Server-Self-Host/.env
 /Moralis-Server-Self-Host/node_modules
