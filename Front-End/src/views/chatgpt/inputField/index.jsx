@@ -125,9 +125,7 @@ const InputSection = ({ handleMessageInput }) => {
                                         {handleMessageInput ? <IconSend stroke={1.5} size="1.3rem" /> : <IconPlayerStopFilled stroke={1.5} size="1.3rem" />}
                                     </SendButtonAvatarStyle>
                                 </ButtonBase>
-
                             </InputAdornment>
-
                         </>
                     }
 

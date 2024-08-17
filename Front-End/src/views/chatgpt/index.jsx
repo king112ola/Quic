@@ -565,13 +565,18 @@ const ChatGptIndex = () => {
                                                         ,
 
                                                         'image':
-                                                            <SubCard className='blur-load-images'
+                                                            <SubCard
+                                                                className='blur-load-images'
                                                                 // style={{backgroundImage: `url(${message.imageUrlOnIpfs})`}} 
-                                                                sx={{ p: 0, width: { xs: '100%', md: '394px' }, height: { xs: '100%', md: '394px' } }}  >
+                                                                sx={{
+                                                                    maxWidth: '80%',
+                                                                    padding: '15px'
+                                                                }}
+                                                            >
                                                                 <PhotoView src={message.imageUrlOnIpfs} key={`${message.id}-${index}`}>
 
                                                                     <img loading="lazy" onError={(e) => { let url = e.target.src; e.target.src = ""; e.target.src = url }}
-                                                                        style={{ maxWidth: isSmallScreen ? '100%' : '350px', maxHeight: isSmallScreen ? '100%' : '350px', borderRadius: '10px' }}
+                                                                        style={{ maxWidth: isSmallScreen ? '100%' : '350px', maxHeight: isSmallScreen ? '100%' : '350px', borderRadius: '10px', display: 'block' }}
                                                                         src={message.imageUrlOnIpfs}
                                                                     />
 
@@ -593,7 +598,16 @@ const ChatGptIndex = () => {
                                                         ,
 
                                                         'video':
-                                                            <SubCard style={{ alignSelf: "center" }} sx={{ p: 0, width: { xs: '100%', md: '340px' }, height: { xs: '100%', md: '390px' }, display: 'flex', flexDirection: 'column' }} contentSX={{ p: 0 }} >
+                                                            <SubCard style={{ alignSelf: "center" }}
+                                                                sx={{
+                                                                    maxWidth: '80%',
+                                                                    padding: '15px',
+                                                                    width: { xs: '100%', md: '340px' },
+                                                                    height: { xs: '100%', md: '390px' },
+                                                                    display: 'flex',
+                                                                    flexDirection: 'column'
+                                                                }}
+                                                                contentSX={{ p: 0 }} >
                                                                 <MuiTypography variant={isSmallScreen ? 'h5' : 'h4'} pt={2} pl={2}>
                                                                     {sender}:
                                                                 </MuiTypography>
@@ -607,7 +621,11 @@ const ChatGptIndex = () => {
                                                             </SubCard>
                                                         ,
                                                         'audio':
-                                                            <SubCard sx={{ p: 0, width: "32.4%" }}  >
+                                                            <SubCard sx={{
+                                                                maxWidth: '80%',
+                                                                padding: '15px',
+                                                                width: "32.4%"
+                                                            }}  >
                                                                 <MuiTypography variant={isSmallScreen ? 'h5' : 'h4'} gutterBottom  >
                                                                     {sender}:
                                                                 </MuiTypography>
@@ -622,8 +640,10 @@ const ChatGptIndex = () => {
 
                                                             </SubCard>,
                                                         'pdf':
-
-                                                            <SubCard sx={{ p: 0, }} style={{
+                                                            <SubCard sx={{
+                                                                maxWidth: '80%',
+                                                                padding: '15px'
+                                                            }} style={{
                                                                 width: isSmallScreen ? '100%' : '50%',
                                                                 height: '100%',
                                                             }} >
