@@ -8,9 +8,9 @@ const RenderTypewriterText = ({ message, sender, onLoopDone, onType }) => {
             cursor={false}
             words={[`${sender + ":"} ${message}`]}
             loop={1}
-            typeSpeed={0.00001}
             // old regular speed
-            // typeSpeed={23}
+            // typeSpeed={0.00001}
+            typeSpeed={20}
             onType={onType}
             onLoopDone={onLoopDone}
         />
