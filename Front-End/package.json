@@ -11,7 +11,7 @@
     "build+deploy": "vite build && copyfiles _redirects dist && npx netlify-cli deploy --site quic.hk --prod --dir dist",
     "preview": "vite preview",
     "comepileSass": "sass src/assets/scss/style.scss style.css",
-    "github-action-test": "go"
+    "github-action-test": ""
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
