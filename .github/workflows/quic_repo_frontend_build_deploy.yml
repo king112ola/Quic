@@ -25,16 +25,18 @@ jobs:
           cache: 'npm'
           cache-dependency-path: './Front-End/package-lock.json'
 
-      - name: Cache node_modules
+      - name: Cache node modules
+        id: cache-npm
         uses: actions/cache@v3
+        env:
+          cache-name: cache-node-modules
         with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-node-
-          enableCrossOsArchive: false
-          fail-on-cache-miss: false
-          lookup-only: false
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
 
       - name: Create env file
         run: |
