@@ -28,19 +28,19 @@ const utilities = {
             breadcrumbs: false
         },
         {
-            id: 'util-BlockchainAlbum',
-            title: 'Blockchain Album',
-            type: 'item',
-            url: '/utils/util-BlockchainAlbum',
-            icon: icons.IconPalette,
-            breadcrumbs: false
-        },
-        {
             id: 'util-MyMessages',
             title: 'Message Records',
             type: 'item',
             url: '/utils/util-MyMessages',
             icon: icons.IconBrandLoom,
+            breadcrumbs: false
+        },
+        {
+            id: 'util-BlockchainAlbum',
+            title: 'Blockchain Album',
+            type: 'item',
+            url: '/utils/util-BlockchainAlbum',
+            icon: icons.IconPalette,
             breadcrumbs: false
         },
         {
