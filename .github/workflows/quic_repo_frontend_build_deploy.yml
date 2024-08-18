@@ -18,6 +18,13 @@ jobs:
       - name: Repository Checkout
         uses: actions/checkout@v4
 
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: './Front-End/package-lock.json'
+
       - name: Cache node_modules
         uses: actions/cache@v3
         with:
@@ -25,13 +32,9 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-
-      - name: Setup NodeJS
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          cache: 'npm'
-          cache-dependency-path: './Front-End/package-lock.json'
+          enableCrossOsArchive: false
+          fail-on-cache-miss: false
+          lookup-only: false
 
       - name: Create env file
         run: |
