@@ -43,9 +43,6 @@ jobs:
           touch .env
           echo "${{ secrets.FRONT_END_ENV }}" > .env
 
-      - name: Install Netlify
-        run: npm install netlify-cli --location=global
-
       - name: Install Dependencies
         run: npm install
 
@@ -55,8 +52,7 @@ jobs:
       - name: Deploy to Netlify
         id: netlify_deploy
         run: |
-          cp _redirects dist
-          netlify deploy \
+          npm exec netlify deploy \
             --dir dist \
             --site ${{ secrets.NETLIFY_SITE_ID }} \
             --auth ${{ secrets.NETLIFY_API_TOKEN }} \
