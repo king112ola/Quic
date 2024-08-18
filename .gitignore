@@ -9,3 +9,6 @@ Moralis-Server-Self-Host/.env
 /Back-End/pdf/*
 /Moralis-Server-Self-Host/build
 *.wav
+
+# Local Netlify folder
+.netlify
