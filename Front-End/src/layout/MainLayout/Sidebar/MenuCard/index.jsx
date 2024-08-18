@@ -87,9 +87,11 @@ const MenuCard = () => {
     return (
         <CardStyle>
             <CardContent sx={{
-                p: 2,
+
                 background: theme.palette.grey[50],
                 color: theme.palette.grey[900],
+
+                '&:last-child': { padding: 2 },
 
                 '&:hover': {
                     Avatar: {
@@ -106,7 +108,7 @@ const MenuCard = () => {
                     '& .barClass': {
                         background: theme.palette.grey[100],
                     },
-                    
+
                 },
             }}>
                 <List sx={{ p: 0, m: 0 }}>

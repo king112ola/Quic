@@ -16,12 +16,12 @@ const icons = {
 
 const utilities = {
     id: 'utilities',
-    title: 'Ai Engines Utilities',
+    title: 'Quic Tools',
     type: 'group',
     children: [
         {
             id: 'util-INTAI',
-            title: 'All in One',
+            title: 'AI System',
             type: 'item',
             url: '/utils/util-INTAI',
             icon: icons.IconTypography,
