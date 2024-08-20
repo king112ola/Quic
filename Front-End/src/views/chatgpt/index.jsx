@@ -456,13 +456,13 @@ const ChatGptIndex = () => {
                 <MainCard sx={{
                     padding: 0,
                     border: "1px solid rgba(255, 0, 0, .5)",
-                    height: { xs: '64%', sm: '78%' },
+                    height: { xs: '64%', md: '78%' },
                     maxWidth: { md: '60%' },
                     marginX: { md: 'auto' },
-                    paddingTop: { xs: '18px', sm: '24px' },
-                    paddingLeft: { xs: '24px', sm: '24px' },
-                    paddingRight: { xs: '24px', sm: '24px' },
-                    paddingBottom: { xs: '0px', sm: '0px' },
+                    paddingTop: { xs: '18px', md: '24px' },
+                    paddingLeft: { xs: '24px', md: '24px' },
+                    paddingRight: { xs: '24px', md: '24px' },
+                    paddingBottom: { xs: '0px', md: '0px' },
                 }}
                     onWheel={(e) => {
                         if (e.deltaY < 0)
@@ -507,7 +507,9 @@ const ChatGptIndex = () => {
                             overflow: 'auto',
                             scrollbarWidth: 'none',
                         }}>
-                        <Grid container spacing={{ xs: 2, md: 2 }}
+                        <Grid
+                            container
+                            spacing={{ xs: 2, md: 2 }}
 
 
                         >
@@ -638,11 +640,14 @@ const ChatGptIndex = () => {
                                                             </SubCard>
                                                         ,
                                                         'audio':
-                                                            <SubCard sx={{
-                                                                maxWidth: '80%',
-                                                                padding: '15px',
-                                                                width: "32.4%"
-                                                            }}  >
+                                                            <SubCard
+                                                                sx={{
+                                                                    width: { xs: '100%', md: '80%' },
+                                                                    // display: 'block',
+                                                                    // maxWidth: { xs: '100%', md: '100%' },
+                                                                    padding: '15px',
+                                                                    // width: "32.4%"
+                                                                }}  >
                                                                 <MuiTypography variant={isSmallScreen ? 'h5' : 'h4'} gutterBottom  >
                                                                     {sender}:
                                                                 </MuiTypography>
@@ -654,7 +659,6 @@ const ChatGptIndex = () => {
                                                                     src={message.messageBody}
                                                                     onEnded={() => { audioRef.current.audio.current.autoplay = false }}
                                                                 />
-
                                                             </SubCard>,
                                                         'pdf':
                                                             <SubCard sx={{
