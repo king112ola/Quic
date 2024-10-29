@@ -790,10 +790,16 @@ app.post('/api/v1/T2SEDEN', async (req, res) => {
 
   }
 
+
   try {
 
     let T2SEDENAudio_resource_url = await createTextToSpeechFromEden('lovoai')
-
+    res.status(200).send(JSON.stringify([
+      { audioOnIpfs: T2SEDENAudio_resource_url },
+      { promptOnIpfs: 'Chatgpt-659.prompt.json' }
+    ]));
+  
+    return
     downloadT2SEDENAudio(T2SEDENAudio_resource_url, 'audio/T2SEDEN', function (callbacks) {
       uploadToIpfs_Moralis(callbacks, prompt, 'T2SEDEN').then((resultIpfsLinks) => {
         res.status(200).send(resultIpfsLinks)
