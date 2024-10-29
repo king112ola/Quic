@@ -18,6 +18,8 @@ const createProxyAxiosInstance = require('./utils/customAxios');
 const proxyAxiosInstance = createProxyAxiosInstance(process.env.USE_PROXY_PAC);
 const fetchWithRetry = require('node-fetch-retry');
 
+const axios = require('axios');
+
 // In-memory session storage
 const sessions = new Map();
 const SESSION_TIMEOUT = 8 * 60 * 1000; // 8 minutes
@@ -70,7 +72,8 @@ async function initMoralis() {
   })
 }
 
-initMoralis()
+// const { PinataSDK } = require("pinata-web3");
+// const pinata = new PinataSDK(process.env.PINATA_API_KEY, process.env.PINATA_API_SECRET);
 
 const uploadToIpfs_Moralis = async (content, prompt, type) => {
   if (content == "") return // blocking empty case
@@ -170,63 +173,43 @@ const uploadToIpfs_Moralis = async (content, prompt, type) => {
     }
   })
 
-  const responseFromIpfs = await Moralis.EvmApi.ipfs.uploadFolder({
-    abi: uploadInfo
-  })
+  // // this method used to upload to ipfs is deprecated , try pinata instead
+  // const responseFromIpfs = await Moralis.EvmApi.ipfs.uploadFolder({
+  //   abi: uploadInfo
+  // })
 
-  let resultIpfsLinks = responseFromIpfs.jsonResponse.map(element => {
-
-    const pictureFormatConditions = [".bmp", ".png", ".jpg", ".jpeg"];
-
+  let resultIpfsLinks = uploadInfo.map(item => {
     switch (true) {
-      // chatgpt message body
-      case element.path.includes(".chatgpt.json"):
-        return { ChatgptMessageOnIpfs: element.path }
-
-      // chatgpt message body
-      case element.path.includes(".Samsum.json"):
-        return { SAMSUMMessageOnIpfs: element.path }
-
-      // prompt
-      case element.path.includes(".prompt.json"):
-        return { promptOnIpfs: element.path }
-
-      // All sort of  Image body
-      case pictureFormatConditions.some(format => element.path.includes(format)):
-        return { imageUrlOnIpfs: element.path }
-
-      // D-ID
-      case element.path.includes(".D-ID.mp4"):
-        return { videoOnIpfs: element.path }
-
-      // Text to Speech Eden
-      case element.path.includes(".Text2Speech-EDEN.wav"):
-        return { audioOnIpfs: element.path }
-
-      // Musicfy
-      case element.path.includes(".Musicfy.wav"):
-        return { audioOnIpfs: element.path }
-
-      // Doc pdf translate Eden
-      case element.path.includes(".PdfTranslate-EDEN.pdf"):
-        return { pdfOnIpfs: element.path }
-
-      // Riffusion, text / image to music
-      case element.path.includes(".RIFFUSION.mp3"):
-        return { audioOnIpfs: element.path }
-
-      // default to url
+      case item.path.includes(".chatgpt.json"):
+        return { ChatgptMessageOnIpfs: item.path };
+      case item.path.includes(".Samsum.json"):
+        return { SAMSUMMessageOnIpfs: item.path };
+      case item.path.includes(".prompt.json"):
+        return { promptOnIpfs: item.path };
+      case item.path.includes(".bmp") || item.path.includes(".png") || item.path.includes(".jpg") || item.path.includes(".jpeg"):
+        return { imageUrlOnIpfs: item.path };
+      case item.path.includes(".D-ID.mp4"):
+        return { videoOnIpfs: item.path };
+      case item.path.includes(".Text2Speech-EDEN.wav"):
+        return { audioOnIpfs: item.path };
+      case item.path.includes(".Musicfy.wav"):
+        return { audioOnIpfs: item.path };
+      case item.path.includes(".PdfTranslate-EDEN.pdf"):
+        return { pdfOnIpfs: item.path };
+      case item.path.includes(".RIFFUSION.mp3"):
+        return { audioOnIpfs: item.path };
       default:
-        return { url: element.path }
+        return { url: item.path };
     }
+  });
 
-  })
-  let resultIpfsLinksW3S = JSON.parse(JSON.stringify(resultIpfsLinks).replaceAll('ipfs.moralis.io:2053', 'w3s.link'))
-  let resultIpfsLinksDwebLinkIPFS = JSON.parse(JSON.stringify(resultIpfsLinks).replaceAll('ipfs.moralis.io:2053', 'dweb.link'))
-  let resultIpfsLinks4everland = JSON.parse(JSON.stringify(resultIpfsLinks).replaceAll('ipfs.moralis.io:2053', '4everland.io'))
-  let resultIpfsLinksgatewaypinata = JSON.parse(JSON.stringify(resultIpfsLinks).replaceAll('ipfs.moralis.io:2053', 'gateway.pinata.cloud'))
+  let resultIpfsLinksW3S = JSON.parse(JSON.stringify(resultIpfsLinks).replaceAll('ipfs.moralis.io:2053', 'w3s.link'));
+  let resultIpfsLinksDwebLinkIPFS = JSON.parse(JSON.stringify(resultIpfsLinks).replaceAll('ipfs.moralis.io:2053', 'dweb.link'));
+  let resultIpfsLinks4everland = JSON.parse(JSON.stringify(resultIpfsLinks).replaceAll('ipfs.moralis.io:2053', '4everland.io'));
+  let resultIpfsLinksgatewaypinata = JSON.parse(JSON.stringify(resultIpfsLinks).replaceAll('ipfs.moralis.io:2053', 'gateway.pinata.cloud'));
+  console.log(resultIpfsLinksgatewaypinata)
+  return resultIpfsLinksgatewaypinata;
 
-  return resultIpfsLinksgatewaypinata
 }
 
 // download function for getting image form url
@@ -574,6 +557,12 @@ app.post('/api/v1/MUSICFY', async (req, res) => {
   });
 
   let MUSICFYAudio_resource_url = (await response.json())[0]["file_url"]
+  res.status(200).send(JSON.stringify([
+    { audioOnIpfs: MUSICFYAudio_resource_url },
+    { promptOnIpfs: 'Chatgpt-659.prompt.json' }
+  ]));
+
+  return
 
   downloadMUSICFYAudio(MUSICFYAudio_resource_url, 'audio/MUSICFY', function (dest) {
 
@@ -1070,12 +1059,12 @@ app.post('/api/v1/QuicAI', async (req, res) => {
     const selectedAIEngine = eval(Chatgpt_Function_Calling_Response_Message.function_call.name + `("${requested_content_type}")`)
 
     // self calling existing AI Api Endpoint from local Server 
-    const selectedAIEngineResponse = await fetch(quicServerUrl +  '/api/v1/' + selectedAIEngine, {
+    const selectedAIEngineResponse = await fetch(quicServerUrl + '/api/v1/' + selectedAIEngine, {
       method: "POST",
       headers: {
         "ngrok-skip-browser-warning": "620",
         'Content-type': 'application/json',
-        'X-Session-ID': sessionId, 
+        'X-Session-ID': sessionId,
       },
       body: JSON.stringify({
         prompt: prompt
@@ -1165,57 +1154,68 @@ setInterval(() => {
 
 // handle DALL·E 2 api call
 app.post('/api/v1/DALLE2', async (req, res) => {
+  console.log("dall");
 
   try {
+    // Check for prompt in the request body
     if (!req.body.prompt) {
-      console.log("Error missing argument");
-      res.status(500).send(error || 'Missing argument in prompt.');
+      console.log("Error: Missing argument 'prompt'");
+      return res.status(400).send('Missing argument in prompt.');
     }
+
+    // Define parameters for image generation
+    const prompt = req.body.prompt;
+    const numberOfImages = 1; // limit to 1
+    const imageSize = req.body.imageSize || "1024x1024"; // default size if not provided
+
+    // Set up the parameters and headers for the OpenAI API call
+    const imageParameters = {
+      model: "dall-e-3",
+      prompt: prompt,
+      n: numberOfImages,
+      size: imageSize,
+    };
+
+    const response = await axios({
+      method: 'post',
+      url: 'https://api.openai.com/v1/images/generations',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      data: imageParameters,
+    });
+
+
+    const url = response.data.data.map(element => element.url);
+
+    // Send the response with image data
+    res.status(200).send(JSON.stringify([
+      { imageUrlOnIpfs: url[0] },
+      { promptOnIpfs: 'Chatgpt-659.prompt.json' }
+    ]));
+
+
+    // Additional processing: download images and upload to IPFS
+    // let imagesLocation = url.map((eachUrl) => {
+    //   let location = downloadDALLE2Image(eachUrl, 'img/DALLE2', async (callbacks) => {
+    //     try {
+    //       const resultIpfsLinks = await uploadToIpfs_Moralis(callbacks, prompt, 'DALLE2');
+    //       res.status(200).send(resultIpfsLinks);
+    //     } catch (uploadError) {
+    //       console.error('IPFS upload error:', uploadError);
+    //       res.status(500).json({ error: 'Failed to upload to IPFS.' });
+    //     }
+    //   });
+    //   return location;
+    // });
+
   } catch (error) {
     console.error(error);
-    res.status(500).send(error || 'Missing argument in prompt.');
+    res.status(500).json({
+      error: error.message
+    });
   }
-
-  try {
-    const prompt = req.body.prompt;
-    const numberOfImages = req.body.numberOfImages;
-    const imageSize = req.body.imageSize;
-
-    const imageParameters = {
-      prompt: prompt,
-      n: numberOfImages, // max is 4
-      size: imageSize, // max is 1024x1024
-    }
-
-    const response = await openai.createImage(imageParameters);
-    // 
-    let url = response.data.data.map(element => element.url)
-
-    // for each url, because we could have more than one photo, and return image location locally
-    let imagesLocation = url.map((eachUrl) => {
-
-      let location = downloadDALLE2Image(eachUrl, 'img/DALLE2', function (callbacks) {
-        // example callbacks = img/DALLE2-30.jpg
-        // uploadToIpfs_Moralis(callbacks);
-        uploadToIpfs_Moralis(callbacks, prompt, 'DALLE2').then((resultIpfsLinks) => {
-
-          // just a quic switch for better performance , will be removed
-          // resultIpfsLinks[0].imageUrlOnIpfs = url[0]
-
-          res.status(200).send(resultIpfsLinks)
-
-        }
-        )
-
-
-      })
-      return location
-    })
-
-  } catch (error) {
-    //  console.error(error)
-    res.status(500).send(error || 'Something went wrong');
-  }
-})
+});
 
 module.exports = app;
